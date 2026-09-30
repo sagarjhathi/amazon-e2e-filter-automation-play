@@ -1,10 +1,11 @@
 import { Page ,Locator} from '@playwright/test';
+import ProductListingPage from '../pages/ProductListingPage';
 
 
-class GenericUtility{
+class GenericUtility extends ProductListingPage{
 
 
-    
+
 
     public async filterCheckUnderList(filterName: string): Promise<boolean> {
 
