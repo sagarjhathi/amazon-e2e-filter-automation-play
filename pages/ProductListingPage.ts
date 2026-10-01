@@ -550,32 +550,28 @@ class ProductListingPage {
 
 
 
-    public async filterCheckUnderList(filterName: string): Promise<boolean> {
 
-    const target = filterName.trim().toLowerCase();
 
-    const filterCount = await this.listOfFilterNameInLeftNav.count();
 
-    for (let i = 0; i < filterCount; i++) {
 
-        const filterText = (
-            await this.listOfFilterNameInLeftNav.nth(i).innerText()
-        ).trim().toLowerCase();
+public async filterCheckUnderList(filterName1: string, filterName2?: string): Promise<boolean> {
+  const filterNames: string[] = await this.listOfFilterNameInLeftNav.allInnerTexts();
+  const normalizedNames = filterNames.map(name => name.trim().toLowerCase());
 
-        if (filterText === target) {
-            console.log(`${filterName} matches with assert text here`);
-            console.log('Found the Filter within the filter check List');
+  const target1 = filterName1.trim().toLowerCase();
+  const existsTarget1 = normalizedNames.includes(target1);
 
-            return true;
-        }
-    }
+  let existsTarget2 = false; // default: no second filter to check, so it shouldn't force a true
 
-    console.log(
-        `Filter option '${filterName}' does not exist in the list. Skipping the test.`
-    );
+  if (filterName2) {
+    const target2 = filterName2.trim().toLowerCase();
+    existsTarget2 = normalizedNames.includes(target2);
+  }
 
-    return false;
+  return existsTarget1 || existsTarget2;
 }
+
+
 
 
 }
