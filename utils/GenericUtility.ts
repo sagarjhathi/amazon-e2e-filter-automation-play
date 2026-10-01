@@ -2,21 +2,27 @@ import { Page ,Locator} from '@playwright/test';
 import ProductListingPage from '../pages/ProductListingPage';
 
 
-class GenericUtility extends ProductListingPage{
+class GenericUtility{
 
 
+
+    private productListingPage: ProductListingPage;
+
+  constructor(page: Page) {
+    this.productListingPage = new ProductListingPage(page);
+  }
 
 
     public async filterCheckUnderList(filterName: string): Promise<boolean> {
 
     const target = filterName.trim().toLowerCase();
 
-    const filterCount = await this.listOfFilterNameInLeftNav.count();
+    const filterCount = await this.productListingPage.listOfFilterNameInLeftNav.count();
 
     for (let i = 0; i < filterCount; i++) {
 
         const filterText = (
-            await this.listOfFilterNameInLeftNav.nth(i).innerText()
+            await this.productListingPage.listOfFilterNameInLeftNav.nth(i).innerText()
         ).trim().toLowerCase();
 
         if (filterText === target) {
@@ -36,4 +42,4 @@ class GenericUtility extends ProductListingPage{
 
 
 
-}
+} export default GenericUtility;

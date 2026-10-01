@@ -45,3 +45,4 @@ class AmazonLandingPage{
 
 
 }
+export default AmazonLandingPage;
