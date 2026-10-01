@@ -112,5 +112,45 @@ async setSliderValue(locator: Locator, value: number): Promise<void> {
   }
 
 
+
+ async clickMoreButtonIfPresent(moreButton: Locator): Promise<void> {
+  try {
+    if (await moreButton.isVisible()) {
+      await this.smoothScrollToElement(moreButton);
+      await moreButton.click();
+    }
+    // else: button isn't present — nothing to do, this is a normal, expected outcome
+  } catch (error) {
+    console.warn(`Unexpected error while clicking the 'more' button: ${error}`);
+  }
+}
+
+    async openClickOnNewPage(element: Locator): Promise<boolean> {
+  const context = this.page.context();
+  const beforeCount = context.pages().length;
+
+  try {
+    await this.page.keyboard.down('Control');
+    await element.click();
+    await this.page.keyboard.up('Control');
+
+    if (context.pages().length > beforeCount) {
+      return true;
+    }
+    return false;
+
+  } catch (error) {
+    try {
+      await element.click();
+      if (context.pages().length > beforeCount) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+}
+
 }
  export default GenericUtility;
