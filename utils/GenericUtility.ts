@@ -1,4 +1,4 @@
-import { Page ,Locator} from '@playwright/test';
+import { Page ,Locator, TestInfo} from '@playwright/test';
 import ProductListingPage from '../pages/ProductListingPage';
 
 
@@ -6,11 +6,13 @@ class GenericUtility{
 
 
   private page:Page;
+  private testInfo:TestInfo;
   private productListingPage: ProductListingPage;
 
   constructor(page: Page) {
     this.page=page;
     this.productListingPage = new ProductListingPage(page);
+
   }
 
 
@@ -207,6 +209,83 @@ String() already does, with more code for no extra benefit.
   return bool;
 }
 
+
+
+
+async safeClickBooleanWithScreenShot(locatorr: Locator, filterName: string, filterOption: string): Promise<boolean> {
+  console.log(`Within safeClickBooleanWithScreenShot method`);
+
+  let filterOptionToPass: string = filterOption;
+
+  let attempts: number = 0;
+  while (attempts < 3) {
+    try {
+      await this.smoothScrollToElement(this.productListingPage.getFilterHeaderByTypeAndName(filterName));
+
+      try {
+        await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
+      } catch (error) {
+        console.log(`Could not find more button`);
+      }
+
+      let element: Locator = locatorr;
+      await element.click();
+
+      await this.smoothScrollToElement(this.productListingPage.getFilterHeaderByTypeAndName(filterName));
+
+      try {
+        await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
+      } catch (error) {
+        console.log(`Could not find more button`);
+      }
+
+      await this.smoothScrollToElement(this.productListingPage.getAppliedFilterByTypeAndName(filterName, filterOption));
+
+      console.log(`Clicked the element using safe click, element is ${element}`);
+      await this.capture(this.testInfo, filterOptionToPass);
+      return true; // success
+    } catch (error) {
+      console.log(`Retrying click for: ${locatorr} - Attempt ${attempts + 1}`);
+      attempts++;
+
+      try {
+        await this.page.reload();
+
+        console.log(`Cannot apply filter, taking failed screenshot for -> ${filterOption}`);
+        await this.smoothScrollToElement(this.productListingPage.getFilterHeaderByTypeAndName(filterName));
+
+        try {
+          await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
+        } catch (error) {
+          console.log(`Could not find more button`);
+        }
+
+        await this.capture(this.testInfo, filterOptionToPass, "failed filter apply screenshot-");
+
+        console.log(`Refreshing the page, while trying to click -> ${locatorr}`);
+      } catch (error) {}
+    }
+  }
+
+  console.log(`Skipping click action: Element not clickable after ${attempts} attempts - ${locatorr}`);
+  return false;
+}
+
+
+        async capture(testInfo: TestInfo, ...names: string[]): Promise<string> {
+  try {
+    const inputNames = names.join("_");
+    const fileName = `${inputNames || "screenshot"}_${Date.now()}.png`;
+    const filePath = testInfo.outputPath(fileName);
+
+    await this.page.screenshot({ path: filePath });
+
+    return filePath;
+  } catch (error) {
+    console.error(`Screenshot capture failed: ${error}`);
+    return "";
+  }
+}
 
 }
  export default GenericUtility;
