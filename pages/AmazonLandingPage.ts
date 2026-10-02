@@ -10,7 +10,7 @@ class AmazonLandingPage{
 	
 	private searchBarLandingPage:Locator; 
 	
-	private amazonLogoLandingPage:Locator; 
+	public amazonLogoLandingPage:Locator; 
 		
 	private submitSearchButton:Locator ;
 		
