@@ -152,5 +152,61 @@ async setSliderValue(locator: Locator, value: number): Promise<void> {
   }
 }
 
+
+
+
+  addFieldIfPresent(key :string,value :string, filterValue :string, productIndex :number, result: Map<string, string | number | boolean | null> ):void {
+
+
+	 if (value.trim().length>0) {
+		 result.set(key, value);
+	 } else {
+		 result.set(key, null);  
+    console.warn(
+  `Failed to fetch '${key}' for filter value -> ${filterValue} and index -> ${productIndex}`
+);
+	 }  
+
+}
+
+
+
+
+
+ /*
+global String() function, which already handles 
+converting every type to a string correctly — so manually 
+narrowing each type yourself would just be re-implementing what 
+String() already does, with more code for no extra benefit.
+ */
+  safeLower(value: unknown): string {
+  if (value == null) return "";
+  return String(value).toLowerCase();
+}
+
+
+
+
+
+	containsCheck(toBeChecked: string, toBeCheckedIn: string): boolean {
+
+  let list: string[] = toBeChecked.split(/\s+/);
+
+  let bool: boolean = true;
+  for (let i = 0; i < list.length; i++) {
+    let str: string = list[i];
+
+    if (toBeCheckedIn.includes(str)) {
+      console.warn(`Text present in containsCheck method, text checked is "${str}"`);
+    } else {
+      bool = false;
+      console.warn(`Text NOT present in containsCheck method, text checked is "${str}"`);
+    }
+  }
+
+  return bool;
+}
+
+
 }
  export default GenericUtility;
