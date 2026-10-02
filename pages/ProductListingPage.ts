@@ -556,16 +556,16 @@ class ProductListingPage {
 
 public async filterCheckUnderList(filterName1: string, filterName2?: string): Promise<boolean> {
   const filterNames: string[] = await this.listOfFilterNameInLeftNav.allInnerTexts();
-  const normalizedNames = filterNames.map(name => name.trim().toLowerCase());
+  const normalizedNames = await filterNames.map(name => name.trim().toLowerCase());
 
-  const target1 = filterName1.trim().toLowerCase();
-  const existsTarget1 = normalizedNames.includes(target1);
+  const target1 = await filterName1.trim().toLowerCase();
+  const existsTarget1 = await normalizedNames.includes(target1);
 
   let existsTarget2 = false; // default: no second filter to check, so it shouldn't force a true
 
   if (filterName2) {
-    const target2 = filterName2.trim().toLowerCase();
-    existsTarget2 = normalizedNames.includes(target2);
+    const target2 =await  filterName2.trim().toLowerCase();
+    existsTarget2 = await normalizedNames.includes(target2);
   }
 
   
