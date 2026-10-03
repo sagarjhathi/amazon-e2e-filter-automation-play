@@ -13,6 +13,8 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests',
+  /* slowMo adds 1.5s per action, so the default 30s is far too short for the brand filter flow */
+  timeout: 300_000,
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -27,11 +29,20 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
-
+  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+     launchOptions: {
+          slowMo: 2000, // milliseconds of delay before every Playwright action
+    args: ['--disable-blink-features=AutomationControlled'],
+  },
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure-and-retries',
   
-    headless:false,
+    headless:true,
+
+    /* Max wait for a single action (click, fill, ...) before it fails naming the locator */
+    actionTimeout: 15_000,
+    /* Max wait for a navigation (goto, reload, ...) */
+    navigationTimeout: 30_000,
   },
 
   /* Configure projects for major browsers */
