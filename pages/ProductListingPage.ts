@@ -329,68 +329,6 @@ class ProductListingPage {
 }
 
 
-    // public getFilterByTypeAndName(
-    //     filterName: string,
-    //     filterOption: string
-    // ): Locator {
-
-    //     switch (filterName.toLowerCase()) {
-
-    //         case "processorspeed":
-    //             return this.listProcessorSpeedOptionsBy
-    //                 .filter({ hasText: new RegExp(`^${filterOption}$`, 'i') });
-
-    //         case "storagecapacity":
-    //             return this.listStorageCapacityOptionsBy
-    //                 .filter({ hasText: filterOption });
-
-    //         case "brands":
-    //             return this.listBrandsOptionsByNew
-    //                 .filter({ hasText: filterOption });
-
-    //         case "batterycapacity":
-    //             return this.listBatteryCapacityOptionsBy
-    //                 .filter({ hasText: filterOption });
-
-    //         case "displaysize":
-    //             return this.listDisplaySizeOptionsBy
-    //                 .filter({ hasText: filterOption });
-
-    //         case "displaytype":
-    //             return this.listDisplayTypeOptionsBy
-    //                 .filter({ hasText: filterOption });
-
-    //         case "operatingsystem":
-    //             return this.listOperatingSystemVersionOptionsBy
-    //                 .filter({ hasText: filterOption });
-
-    //         case "mobilephoneprimarycameraresolution":
-    //             return this.listMobilePhonePrimaryCameraResolutionOptionsBy
-    //                 .filter({ hasText: filterOption });
-
-    //         case "discount":
-    //             return this.listDiscountOptionsBy
-    //                 .filter({ hasText: filterOption });
-
-    //         case "operating system version":
-    //             return this.listOperatingSystemVersionOptionsBy
-    //                 .filter({ hasText: filterOption });
-
-    //         case "brandsold":
-    //             return this.listBrandsOptionsByOld
-    //                 .filter({ hasText: filterOption });
-
-    //         case "screensize":
-    //             return this.listDisplaySizeOptionsBy
-    //                 .filter({ hasText: filterOption });
-
-    //         default:
-    //             throw new Error(`Unknown filter type: ${filterName}`);
-    //     }
-
-
-
-
     public getAppliedFilterByTypeAndName(filterName: string, filterOption: string): Locator {
   console.log(`Within getAppliedFilterByTypeAndName method`);
 
@@ -437,67 +375,6 @@ class ProductListingPage {
 }
 
 
-    // public getAppliedFilterByTypeAndName(
-    //     filterName: string,
-    //     filterOption: string
-    // ): Locator {
-
-    //     switch (filterName.toLowerCase()) {
-
-    //         case "processorspeed":
-    //             return this.appliedProcessorSpeedOptions
-    //                 .filter({ hasText: filterOption });
-
-    //         case "storagecapacity":
-    //             return this.appliedStorageCapacityOptions
-    //                 .filter({ hasText: filterOption });
-
-    //         case "brands":
-    //             return this.appliedBrandsOptions
-    //                 .filter({ hasText: filterOption });
-
-    //         case "batterycapacity":
-    //             return this.appliedBatteryCapacityOptions
-    //                 .filter({ hasText: filterOption });
-
-    //         case "displaysize":
-    //             return this.appliedDisplaySizeOptions
-    //                 .filter({ hasText: filterOption });
-
-    //         case "displaytype":
-    //             return this.appliedDisplayTypeOptions
-    //                 .filter({ hasText: filterOption });
-
-    //         case "operatingsystem":
-    //             return this.appliedOperatingSystemOptions
-    //                 .filter({ hasText: filterOption });
-
-    //         case "mobilephoneprimarycameraresolution":
-    //             return this.appliedMobilePhonePrimaryCameraResolutionOptions
-    //                 .filter({ hasText: filterOption });
-
-    //         case "discount":
-    //             return this.appliedDiscountOptions
-    //                 .filter({ hasText: filterOption });
-
-    //         case "operating system version":
-    //             return this.appliedOperatingSystemVersionOptions
-    //                 .filter({ hasText: filterOption });
-
-    //         case "brandsold":
-    //             return this.appliedBrandsOldOptions
-    //                 .filter({ hasText: filterOption });
-
-    //         case "screensize":
-    //             return this.appliedScreenSizeOptions
-    //                 .filter({ hasText: filterOption });
-
-    //         default:
-    //             throw new Error(`Unknown filter type: ${filterName}`);
-    //     }
-    // }
-
-
     public getMoreButtonByFilterTypeAndName(
         filterName: string
     ): Locator {
@@ -542,68 +419,9 @@ class ProductListingPage {
 
 
 
-    // public getFilterHeaderByTypeAndName(
-    //     filterName: string
-    // ): Locator {
-
-    //     switch (filterName.toLowerCase()) {
-
-    //         case "processorspeed":
-    //             return this.listOfFilterNameInLeftNav
-    //                 .filter({ hasText: "Processor Speed" });
-
-    //         case "storagecapacity":
-    //             return this.listOfFilterNameInLeftNav
-    //                 .filter({ hasText: "Storage Capacity" });
-
-    //         case "brands":
-    //             return this.listOfFilterNameInLeftNav
-    //                 .filter({ hasText: "Brands" });
-
-    //         case "batterycapacity":
-    //             return this.listOfFilterNameInLeftNav
-    //                 .filter({ hasText: "Battery Capacity" });
-
-    //         case "displaysize":
-    //             return this.listOfFilterNameInLeftNav
-    //                 .filter({ hasText: "Display Size" });
-
-    //         case "displaytype":
-    //             return this.listOfFilterNameInLeftNav
-    //                 .filter({ hasText: "Display Type" });
-
-    //         case "operatingsystem":
-    //             return this.listOfFilterNameInLeftNav
-    //                 .filter({ hasText: "Operating System" });
-
-    //         case "mobilephoneprimarycameraresolution":
-    //             return this.listOfFilterNameInLeftNav
-    //                 .filter({ hasText: "Mobile Phone Primary Camera Resolution" });
-
-    //         case "discount":
-    //             return this.listOfFilterNameInLeftNav
-    //                 .filter({ hasText: "Discount" });
-
-    //         case "brandsold":
-    //             return this.listOfFilterNameInLeftNav
-    //                 .filter({ hasText: "Brands" });
-
-    //         case "screensize":
-    //             return this.listOfFilterNameInLeftNav
-    //                 .filter({ hasText: "Screen Size" });
-
-    //         default:
-    //             throw new Error(`Unknown filter type: ${filterName}`);
-    //     }
-    // }
-
-
     public getProductByIndex(index: number): Locator {
         return this.productNameListingPageBy.nth(index - 1);
     }
-
-
-
 
 
 
