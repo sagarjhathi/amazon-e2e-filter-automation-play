@@ -14,12 +14,14 @@ class AmazonLandingPage{
 		
 	private submitSearchButton:Locator ;
 		
+    public continueShoppingButtonCaptcha:Locator;
 
     constructor(page:Page){
         this.page=page;
         this.searchBarLandingPage=page.locator("xpath=//input[@placeholder='Search Amazon.in']");
         this.amazonLogoLandingPage=page.locator("xpath=//a[@id='nav-logo-sprites']");
         this.submitSearchButton=page.locator("xpath=//input[@id='nav-search-submit-button']");
+        this.continueShoppingButtonCaptcha=page.locator("//*[translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='continue shopping']");
 
     }
 

@@ -1,15 +1,17 @@
 import { Page ,Locator} from '@playwright/test';
+import AmazonLandingPage from '../pages/AmazonLandingPage';
 
 class CaptchaHandler {
 
     private page: Page;
-
+    
+    
     constructor(page: Page) {
         this.page = page;
     }
 
-    public async isCaptchaPage(): Promise<boolean> {
-
+    public async isCaptchaPage(page:Page): Promise<boolean> {
+        let landingPage= new AmazonLandingPage(page);
         try {
             const bodyText = (await this.page.locator('body').innerText())
                 .toLowerCase();
@@ -23,10 +25,9 @@ class CaptchaHandler {
                 return true;
             }
 
-            return await this.page
-                .getByText('Continue shopping', { exact: true })
-                .count() > 0;
-
+            
+            let buttons :Locator[]=await landingPage.continueShoppingButtonCaptcha.all();
+            return buttons.length>0;
         } catch (e) {
             return false;
         }
@@ -38,7 +39,7 @@ class CaptchaHandler {
 
 
 
-  public async handleCaptcha(): Promise<boolean> {
+  public async handleCaptcha(page:Page): Promise<boolean> {
 
         const retries = 3;
         let backoff = 1000;
@@ -46,7 +47,7 @@ class CaptchaHandler {
         for (let i = 1; i <= retries; i++) {
 
             // If captcha is already gone, we're done
-            if (!await this.isCaptchaPage()) {
+            if (!await this.isCaptchaPage(page)) {
                 return true;
             }
 
@@ -92,7 +93,7 @@ class CaptchaHandler {
         }
 
         // Check one final time after the last attempt
-        if (!await this.isCaptchaPage()) {
+        if (!await this.isCaptchaPage(page)) {
             return true;
         }
 
