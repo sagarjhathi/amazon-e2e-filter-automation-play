@@ -41,7 +41,7 @@ class AmazonLandingPage{
 	}
 	
 	 async openingLandingPage() {
-        await this.page.goto('https://www.amazon.in/');
+        await this.page.goto('https://www.amazon.in/ref=cs_503_link/');
 	}
 
 

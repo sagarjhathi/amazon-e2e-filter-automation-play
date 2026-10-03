@@ -1,4 +1,4 @@
-import { test , Locator, expect, Page } from "@playwright/test";
+import { test , Locator, expect, Page, TestInfo } from "@playwright/test";
 import ProductListingPage from "../pages/ProductListingPage";
 import GenericUtility from "../utils/GenericUtility";
 
@@ -9,12 +9,33 @@ class BrandFilterFlows{
 
     private  productPage:ProductListingPage;
 
-	private  genericUtility:GenericUtility;
+	  private  genericUtility:GenericUtility;
 	
-	constructor(page:Page) {
+
+    private testInfo:TestInfo;
+	// Titles often use a shortened form of the brand name (e.g. "Moto g06" for Motorola).
+	private static readonly BRAND_ALIASES: Record<string, string[]> = {
+		motorola: ["moto"],
+		apple: ["iphone"],
+	};
+
+	private titleMatchesBrand(title: string, brand: string): boolean {
+		const normalize = (value: string): string => value.toLowerCase().replace(/[^a-z0-9]/g, "");
+		const normalizedTitle = normalize(title);
+
+		if (normalizedTitle.includes(normalize(brand))) {
+			return true;
+		}
+
+		const aliases: string[] = BrandFilterFlows.BRAND_ALIASES[brand.toLowerCase()] ?? [];
+		return aliases.some((alias) => normalizedTitle.includes(normalize(alias)));
+	}
+
+	constructor(page:Page,testInfo:TestInfo) {
         this.page=page;
+        this.testInfo=testInfo;
         this.productPage = new ProductListingPage(page);
-        this.genericUtility = new GenericUtility(page);
+        this.genericUtility = new GenericUtility(page,testInfo);
     }
 	
 	
@@ -25,11 +46,6 @@ class BrandFilterFlows{
 	async applyFilterAndValidateBrandsFilterWithResult(filterOptionsBy: Locator, filterName: string): Promise<Map<string, string | number | boolean | null | string[]>[]> {
   console.log(`Within applyFilterAndValidateBrandsFilterWithResult method`);
 
-  console.log(`Scrolling to the 'More' Button under brands filter section`);
-
-  await this.genericUtility.clickMoreButtonIfPresent(this.productPage.seeMoreButtonUnderBrandFilter);
-
-  console.log(`Clicked the 'More' Button under brands filter section`);
 
   let filterOptions: Locator[] = await (filterOptionsBy.all());
 
@@ -42,38 +58,56 @@ class BrandFilterFlows{
 
   let runAll: boolean = false;
   if (runAll == false) {
-    filterOptionSize = 3;
+    filterOptionSize = 10;
   }
 
   let allResults: Map<string, string | number | boolean | null | string[]>[] = [];
 
-  for (let i = 0; i <= filterOptionSize - 1; i++) {
+  for (let i = 0; i < filterOptionSize; i++) {
     console.log(`Within the filterOptions loop — iteration ${i} of ${filterOptionSize}`);
-
-    let inloopParent: Locator[] = await (filterOptionsBy.all());
-
-    if (i > inloopParent.length - 1) {
-      console.log(`Avoiding out of bounds — index ${i} exceeds live list size ${inloopParent.length}`);
-      continue;
+    
+    // After a clear/reload the brand list can take a moment to come back, so wait for it before counting
+    try {
+      await filterOptionsBy.first().waitFor({ state: 'visible', timeout: 10_000 });
+    } catch (error) {
+      console.warn(`Brand options did not reappear within 10s before iteration ${i}`);
     }
 
+    // The list can come back collapsed, so expand it (no-op if already expanded) before counting
     await this.genericUtility.clickMoreButtonIfPresent(this.productPage.seeMoreButtonUnderBrandFilter);
 
-    inloopParent = await (filterOptionsBy.all());
+    const liveCount: number = await filterOptionsBy.count();
 
-    if (i > inloopParent.length - 1) {
-      console.log(`Avoiding out of bounds — index ${i} exceeds live list size ${inloopParent.length}`);
+    if (i >= liveCount) {
+      console.log(`Avoiding out of bounds — index ${i} exceeds live list size ${liveCount}`);
       continue;
     }
 
-    let str: string = (await inloopParent[i].innerText()).trim();
+    let str: string = (await filterOptionsBy.nth(i).innerText()).trim();
 
-    if (await this.genericUtility.safeClickBooleanWithScreenShot(this.productPage.getFilterByTypeAndName(filterName, str), filterName, str) == false) {
-      console.log(`Filter click failed for: ${str}`);
-      continue;
-    }
+    // if (await this.genericUtility.safeClickBooleanWithScreenShot(this.productPage.getFilterByTypeAndName(filterName, str), filterName, str)==false) {
+    //   console.log(`Filter click failed for: ${str}`);
+    //   continue;
+    // }
+
+  //  await this.productPage.getFilterByTypeAndName(filterName, str).click();
+try {
+  await this.productPage.getFilterByTypeAndName(filterName, str).click();
+} catch (error) {
+  console.warn(`Filter click failed for: ${str} — ${error}`);
+  continue;
+}
+
 
     console.log(`Clicked on ${str} within the filterOptions loop`);
+
+    // Wait for the results to refresh with the brand applied before reading titles
+    try {
+      await this.productPage.getAppliedFilterByTypeAndName(filterName, str).first().waitFor({ state: 'visible', timeout: 10_000 });
+      await this.productPage.productNameListingPageBy.first().waitFor({ state: 'visible', timeout: 10_000 });
+    } catch (error) {
+      console.warn(`Results did not refresh within 10s after applying '${str}'`);
+    }
 
     let productNameListingPage: Locator[] = await (this.productPage.productNameListingPageBy.all());
 
@@ -85,9 +119,10 @@ class BrandFilterFlows{
       mismatchDetails.push(`❌ No products found for brand '${str}' — filter may not have applied correctly`);
     } else {
       for (let k = 0; k < productNameListingPage.length; k++) {
+    
         let title: string = await (productNameListingPage[k].innerText());
 
-        let titleMatches: boolean = title.toLowerCase().includes(str.toLowerCase());
+        let titleMatches: boolean = this.titleMatchesBrand(title, str);
         console.log(`Product index ${k} for brand '${str}' — title: '${title}', matches: ${titleMatches}`);
 
         if (!titleMatches) {
