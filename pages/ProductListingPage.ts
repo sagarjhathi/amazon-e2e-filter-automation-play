@@ -94,8 +94,11 @@ class ProductListingPage {
             page.locator("//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Processor Speed']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base']");
 
 
-        this.listBrandsOptionsByNew =
-            page.locator("//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Brands']/parent::div/following-sibling::div[@class='a-section a-spacing-medium sf-navigation-searchable-content']//span[@class='a-size-base a-color-base']");
+        // this.listBrandsOptionsByNew =
+        //     page.locator("//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Brands']/parent::div/following-sibling::div[@class='a-section a-spacing-medium sf-navigation-searchable-content']//span[@class='a-size-base a-color-base']");
+
+            this.listBrandsOptionsByNew =
+            page.locator("//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Brands']/parent::div/following-sibling ::ul//span[@class='a-size-base a-color-base']");
 
 
         this.listBrandsOptionsByOld =
@@ -280,168 +283,219 @@ class ProductListingPage {
 
 
 
-    public getFilterByTypeAndName(
-        filterName: string,
-        filterOption: string
-    ): Locator {
+    public getFilterByTypeAndName(filterName: string, filterOption: string): Locator {
+  console.log(`Within getFilterByTypeAndName method`);
 
-        switch (filterName.toLowerCase()) {
+  switch (filterName.toLowerCase()) {
+    case "processorspeed":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Processor Speed']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
-            case "processorspeed":
-                return this.listProcessorSpeedOptionsBy
-                    .filter({ hasText: filterOption });
+    case "storagecapacity":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Storage Capacity']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
-            case "storagecapacity":
-                return this.listStorageCapacityOptionsBy
-                    .filter({ hasText: filterOption });
+    case "brands":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Brands']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
-            case "brands":
-                return this.listBrandsOptionsByNew
-                    .filter({ hasText: filterOption });
+    case "batterycapacity":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Battery Capacity']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
-            case "batterycapacity":
-                return this.listBatteryCapacityOptionsBy
-                    .filter({ hasText: filterOption });
+    case "displaysize":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Display Size']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
-            case "displaysize":
-                return this.listDisplaySizeOptionsBy
-                    .filter({ hasText: filterOption });
+    case "displaytype":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Display Type']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
-            case "displaytype":
-                return this.listDisplayTypeOptionsBy
-                    .filter({ hasText: filterOption });
+    case "operatingsystem":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Operating System']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
-            case "operatingsystem":
-                return this.listOperatingSystemVersionOptionsBy
-                    .filter({ hasText: filterOption });
+    case "mobilephoneprimarycameraresolution":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Mobile Phone Primary Camera Resolution']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
-            case "mobilephoneprimarycameraresolution":
-                return this.listMobilePhonePrimaryCameraResolutionOptionsBy
-                    .filter({ hasText: filterOption });
+    case "discount":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Discount']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
-            case "discount":
-                return this.listDiscountOptionsBy
-                    .filter({ hasText: filterOption });
+    case "operating system version":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Operating System Version']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
-            case "operating system version":
-                return this.listOperatingSystemVersionOptionsBy
-                    .filter({ hasText: filterOption });
+    case "brandsold":
+      return this.page.locator(`//ul[@id='filter-p_123']//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
-            case "brandsold":
-                return this.listBrandsOptionsByOld
-                    .filter({ hasText: filterOption });
+    case "screensize":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Screen Size']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
-            case "screensize":
-                return this.listDisplaySizeOptionsBy
-                    .filter({ hasText: filterOption });
+    default:
+      throw new Error(`Unknown filter type: ${filterName}`);
+  }
+}
 
-            default:
-                throw new Error(`Unknown filter type: ${filterName}`);
-        }
 
+    // public getFilterByTypeAndName(
+    //     filterName: string,
+    //     filterOption: string
+    // ): Locator {
 
+    //     switch (filterName.toLowerCase()) {
 
+    //         case "processorspeed":
+    //             return this.listProcessorSpeedOptionsBy
+    //                 .filter({ hasText: new RegExp(`^${filterOption}$`, 'i') });
 
+    //         case "storagecapacity":
+    //             return this.listStorageCapacityOptionsBy
+    //                 .filter({ hasText: filterOption });
 
+    //         case "brands":
+    //             return this.listBrandsOptionsByNew
+    //                 .filter({ hasText: filterOption });
 
+    //         case "batterycapacity":
+    //             return this.listBatteryCapacityOptionsBy
+    //                 .filter({ hasText: filterOption });
 
+    //         case "displaysize":
+    //             return this.listDisplaySizeOptionsBy
+    //                 .filter({ hasText: filterOption });
 
+    //         case "displaytype":
+    //             return this.listDisplayTypeOptionsBy
+    //                 .filter({ hasText: filterOption });
 
+    //         case "operatingsystem":
+    //             return this.listOperatingSystemVersionOptionsBy
+    //                 .filter({ hasText: filterOption });
 
+    //         case "mobilephoneprimarycameraresolution":
+    //             return this.listMobilePhonePrimaryCameraResolutionOptionsBy
+    //                 .filter({ hasText: filterOption });
 
+    //         case "discount":
+    //             return this.listDiscountOptionsBy
+    //                 .filter({ hasText: filterOption });
 
+    //         case "operating system version":
+    //             return this.listOperatingSystemVersionOptionsBy
+    //                 .filter({ hasText: filterOption });
 
+    //         case "brandsold":
+    //             return this.listBrandsOptionsByOld
+    //                 .filter({ hasText: filterOption });
 
+    //         case "screensize":
+    //             return this.listDisplaySizeOptionsBy
+    //                 .filter({ hasText: filterOption });
 
+    //         default:
+    //             throw new Error(`Unknown filter type: ${filterName}`);
+    //     }
 
 
 
 
+    public getAppliedFilterByTypeAndName(filterName: string, filterOption: string): Locator {
+  console.log(`Within getAppliedFilterByTypeAndName method`);
 
+  switch (filterName.toLowerCase()) {
+    case "processorspeed":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Processor Speed']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base a-text-bold' and text()='${filterOption}']`);
 
+    case "storagecapacity":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Storage Capacity']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base a-text-bold' and text()='${filterOption}']`);
 
+    case "brands":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Brands']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base a-text-bold' and text()='${filterOption}']`);
 
+    case "batterycapacity":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Battery Capacity']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base a-text-bold' and text()='${filterOption}']`);
 
+    case "displaysize":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Display Size']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base a-text-bold' and text()='${filterOption}']`);
 
+    case "displaytype":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Display Type']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base a-text-bold' and text()='${filterOption}']`);
 
+    case "operatingsystem":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Operating System']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base a-text-bold' and text()='${filterOption}']`);
 
+    case "mobilephoneprimarycameraresolution":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Mobile Phone Primary Camera Resolution']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base a-text-bold' and text()='${filterOption}']`);
 
+    case "discount":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Discount']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base a-text-bold' and text()='${filterOption}']`);
 
+    case "operating system version":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Operating System Version']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base a-text-bold' and text()='${filterOption}']`);
 
+    case "brandsold":
+      return this.page.locator(`//ul[@id='filter-p_123']//span[@class='a-size-base a-color-base' and text()='${filterOption}']`);
 
+    case "screensize":
+      return this.page.locator(`//span[@class='a-size-base a-color-base puis-bold-weight-text' and text()='Screen Size']/parent::div/following-sibling::ul//span[@class='a-size-base a-color-base a-text-bold' and text()='${filterOption}']`);
 
+    default:
+      throw new Error(`Unknown filter type: ${filterName}`);
+  }
+}
 
 
+    // public getAppliedFilterByTypeAndName(
+    //     filterName: string,
+    //     filterOption: string
+    // ): Locator {
 
+    //     switch (filterName.toLowerCase()) {
 
+    //         case "processorspeed":
+    //             return this.appliedProcessorSpeedOptions
+    //                 .filter({ hasText: filterOption });
 
+    //         case "storagecapacity":
+    //             return this.appliedStorageCapacityOptions
+    //                 .filter({ hasText: filterOption });
 
+    //         case "brands":
+    //             return this.appliedBrandsOptions
+    //                 .filter({ hasText: filterOption });
 
+    //         case "batterycapacity":
+    //             return this.appliedBatteryCapacityOptions
+    //                 .filter({ hasText: filterOption });
 
+    //         case "displaysize":
+    //             return this.appliedDisplaySizeOptions
+    //                 .filter({ hasText: filterOption });
 
-    }
+    //         case "displaytype":
+    //             return this.appliedDisplayTypeOptions
+    //                 .filter({ hasText: filterOption });
 
+    //         case "operatingsystem":
+    //             return this.appliedOperatingSystemOptions
+    //                 .filter({ hasText: filterOption });
 
+    //         case "mobilephoneprimarycameraresolution":
+    //             return this.appliedMobilePhonePrimaryCameraResolutionOptions
+    //                 .filter({ hasText: filterOption });
 
-    public getAppliedFilterByTypeAndName(
-        filterName: string,
-        filterOption: string
-    ): Locator {
+    //         case "discount":
+    //             return this.appliedDiscountOptions
+    //                 .filter({ hasText: filterOption });
 
-        switch (filterName.toLowerCase()) {
+    //         case "operating system version":
+    //             return this.appliedOperatingSystemVersionOptions
+    //                 .filter({ hasText: filterOption });
 
-            case "processorspeed":
-                return this.appliedProcessorSpeedOptions
-                    .filter({ hasText: filterOption });
+    //         case "brandsold":
+    //             return this.appliedBrandsOldOptions
+    //                 .filter({ hasText: filterOption });
 
-            case "storagecapacity":
-                return this.appliedStorageCapacityOptions
-                    .filter({ hasText: filterOption });
+    //         case "screensize":
+    //             return this.appliedScreenSizeOptions
+    //                 .filter({ hasText: filterOption });
 
-            case "brands":
-                return this.appliedBrandsOptions
-                    .filter({ hasText: filterOption });
-
-            case "batterycapacity":
-                return this.appliedBatteryCapacityOptions
-                    .filter({ hasText: filterOption });
-
-            case "displaysize":
-                return this.appliedDisplaySizeOptions
-                    .filter({ hasText: filterOption });
-
-            case "displaytype":
-                return this.appliedDisplayTypeOptions
-                    .filter({ hasText: filterOption });
-
-            case "operatingsystem":
-                return this.appliedOperatingSystemOptions
-                    .filter({ hasText: filterOption });
-
-            case "mobilephoneprimarycameraresolution":
-                return this.appliedMobilePhonePrimaryCameraResolutionOptions
-                    .filter({ hasText: filterOption });
-
-            case "discount":
-                return this.appliedDiscountOptions
-                    .filter({ hasText: filterOption });
-
-            case "operating system version":
-                return this.appliedOperatingSystemVersionOptions
-                    .filter({ hasText: filterOption });
-
-            case "brandsold":
-                return this.appliedBrandsOldOptions
-                    .filter({ hasText: filterOption });
-
-            case "screensize":
-                return this.appliedScreenSizeOptions
-                    .filter({ hasText: filterOption });
-
-            default:
-                throw new Error(`Unknown filter type: ${filterName}`);
-        }
-    }
+    //         default:
+    //             throw new Error(`Unknown filter type: ${filterName}`);
+    //     }
+    // }
 
 
     public getMoreButtonByFilterTypeAndName(
@@ -488,60 +542,60 @@ class ProductListingPage {
 
 
 
-    public getFilterHeaderByTypeAndName(
-        filterName: string
-    ): Locator {
+    // public getFilterHeaderByTypeAndName(
+    //     filterName: string
+    // ): Locator {
 
-        switch (filterName.toLowerCase()) {
+    //     switch (filterName.toLowerCase()) {
 
-            case "processorspeed":
-                return this.listOfFilterNameInLeftNav
-                    .filter({ hasText: "Processor Speed" });
+    //         case "processorspeed":
+    //             return this.listOfFilterNameInLeftNav
+    //                 .filter({ hasText: "Processor Speed" });
 
-            case "storagecapacity":
-                return this.listOfFilterNameInLeftNav
-                    .filter({ hasText: "Storage Capacity" });
+    //         case "storagecapacity":
+    //             return this.listOfFilterNameInLeftNav
+    //                 .filter({ hasText: "Storage Capacity" });
 
-            case "brands":
-                return this.listOfFilterNameInLeftNav
-                    .filter({ hasText: "Brands" });
+    //         case "brands":
+    //             return this.listOfFilterNameInLeftNav
+    //                 .filter({ hasText: "Brands" });
 
-            case "batterycapacity":
-                return this.listOfFilterNameInLeftNav
-                    .filter({ hasText: "Battery Capacity" });
+    //         case "batterycapacity":
+    //             return this.listOfFilterNameInLeftNav
+    //                 .filter({ hasText: "Battery Capacity" });
 
-            case "displaysize":
-                return this.listOfFilterNameInLeftNav
-                    .filter({ hasText: "Display Size" });
+    //         case "displaysize":
+    //             return this.listOfFilterNameInLeftNav
+    //                 .filter({ hasText: "Display Size" });
 
-            case "displaytype":
-                return this.listOfFilterNameInLeftNav
-                    .filter({ hasText: "Display Type" });
+    //         case "displaytype":
+    //             return this.listOfFilterNameInLeftNav
+    //                 .filter({ hasText: "Display Type" });
 
-            case "operatingsystem":
-                return this.listOfFilterNameInLeftNav
-                    .filter({ hasText: "Operating System" });
+    //         case "operatingsystem":
+    //             return this.listOfFilterNameInLeftNav
+    //                 .filter({ hasText: "Operating System" });
 
-            case "mobilephoneprimarycameraresolution":
-                return this.listOfFilterNameInLeftNav
-                    .filter({ hasText: "Mobile Phone Primary Camera Resolution" });
+    //         case "mobilephoneprimarycameraresolution":
+    //             return this.listOfFilterNameInLeftNav
+    //                 .filter({ hasText: "Mobile Phone Primary Camera Resolution" });
 
-            case "discount":
-                return this.listOfFilterNameInLeftNav
-                    .filter({ hasText: "Discount" });
+    //         case "discount":
+    //             return this.listOfFilterNameInLeftNav
+    //                 .filter({ hasText: "Discount" });
 
-            case "brandsold":
-                return this.listOfFilterNameInLeftNav
-                    .filter({ hasText: "Brands" });
+    //         case "brandsold":
+    //             return this.listOfFilterNameInLeftNav
+    //                 .filter({ hasText: "Brands" });
 
-            case "screensize":
-                return this.listOfFilterNameInLeftNav
-                    .filter({ hasText: "Screen Size" });
+    //         case "screensize":
+    //             return this.listOfFilterNameInLeftNav
+    //                 .filter({ hasText: "Screen Size" });
 
-            default:
-                throw new Error(`Unknown filter type: ${filterName}`);
-        }
-    }
+    //         default:
+    //             throw new Error(`Unknown filter type: ${filterName}`);
+    //     }
+    // }
 
 
     public getProductByIndex(index: number): Locator {
@@ -555,7 +609,9 @@ class ProductListingPage {
 
 
 public async filterCheckUnderList(filterName1: string, filterName2?: string): Promise<boolean> {
+    await this.listOfFilterNameInLeftNav.nth(0).waitFor();
   const filterNames: string[] = await this.listOfFilterNameInLeftNav.allInnerTexts();
+  console.log(filterNames)
   const normalizedNames = await filterNames.map(name => name.trim().toLowerCase());
 
   const target1 = await filterName1.trim().toLowerCase();
@@ -570,6 +626,7 @@ public async filterCheckUnderList(filterName1: string, filterName2?: string): Pr
 
   
   return existsTarget1 || existsTarget2;
+
   
 }
 
