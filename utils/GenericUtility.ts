@@ -9,11 +9,11 @@ class GenericUtility{
   private testInfo:TestInfo;
   private productListingPage: ProductListingPage;
 
-  constructor(page: Page) {
-    this.page=page;
-    this.productListingPage = new ProductListingPage(page);
-
-  }
+ constructor(page: Page, testInfo: TestInfo) {
+  this.page = page;
+  this.testInfo = testInfo;
+  this.productListingPage = new ProductListingPage(page);
+}
 
 
     
@@ -21,6 +21,7 @@ class GenericUtility{
 
   
 async refreshIfServiceUnavailable() {
+
 	   let  pageSource:string = (await this.page.content()).toString().toLowerCase();
 	    let title :string =  (await this.page.title()).toLowerCase();
 
@@ -29,7 +30,12 @@ async refreshIfServiceUnavailable() {
 	        title.includes("service unavailable") ||
 	        title.includes("oops")) {
 
-	       await  this.page.reload();
+              let LinkBbuttons503Error:Locator[]=await this.page.locator("//a[translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='go to the amazon.in home page to continue shopping']").all();
+
+            // if(LinkBbuttons503Error.length>0){
+            //   LinkBbuttons503Error[0].click();
+            // }
+	        await  this.page.reload();
 	    }
 	}
 
@@ -212,15 +218,86 @@ String() already does, with more code for no extra benefit.
 
 
 
+// async safeClickBooleanWithScreenShot(locatorr: Locator, filterName: string, filterOption: string): Promise<boolean> {
+//   console.log(`Within safeClickBooleanWithScreenShot method`);
+
+//   let filterOptionToPass: string = filterOption;
+
+//   let attempts: number = 0;
+//   while (attempts < 3) {
+//     try {
+//       const count = await this.page.locator('//ul[@id=\'filter-p_123\']//span[@class=\'a-size-base a-color-base\']').filter({ hasText: 'Samsung' }).count();
+// console.log(`Matched count: ${count}`);
+//       await this.smoothScrollToElement(this.productListingPage.getFilterByTypeAndName(filterName,filterOption));
+                                                                
+//       try {
+//         await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
+//       } catch (error) {
+//         console.error(`Actual error: ${error}`);
+//         console.log(`Could not find more button`);
+//       }
+
+//       let element: Locator = locatorr;
+//       const countt = await this.page.locator('//ul[@id=\'filter-p_123\']//span[@class=\'a-size-base a-color-base\']').filter({ hasText: 'Samsung' }).count();
+// console.log(`Matched count: ${count}`);
+//       await element.click();
+//        return true; // success
+      
+//       await this.smoothScrollToElement(this.productListingPage.getFilterByTypeAndName(filterName,filterOption));
+
+//       try {
+//         await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
+//       } catch (error) {
+//         console.error(`Actual error: ${error}`);
+//         console.log(`Could not find more button`);
+//       }
+
+//       await this.smoothScrollToElement(this.productListingPage.getAppliedFilterByTypeAndName(filterName, filterOption));
+//        return true; // success
+//       console.log(`Clicked the element using safe click, element is ${element}`);
+//       await this.capture(this.testInfo, filterOptionToPass);
+     
+//     } catch (error) {
+//       console.error(`Actual error: ${error}`);
+//       console.log(`Retrying click for: ${locatorr} - Attempt ${attempts + 1}`);
+//       attempts++;
+
+//       try {
+//         await this.page.reload();
+
+//         console.log(`Cannot apply filter, taking failed screenshot for -> ${filterOption}`);
+//         await this.smoothScrollToElement(this.productListingPage.getFilterByTypeAndName(filterName,filterOption));
+
+//         try {
+//           await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
+//         } catch (error) {
+//           console.error(`Actual error: ${error}`);
+//           console.log(`Could not find more button`);
+//         }
+
+//         await this.capture(this.testInfo, filterOptionToPass, "failed filter apply screenshot-");
+
+//         console.log(`Refreshing the page, while trying to click -> ${locatorr}`);
+//       } catch (error) {
+//         console.error(`Actual error: ${error}`);
+//       }
+//     }
+//   }
+
+//   console.log(`Skipping click action: Element not clickable after ${attempts} attempts - ${locatorr}`);
+//   return false;
+// }
+
+
+
+
 async safeClickBooleanWithScreenShot(locatorr: Locator, filterName: string, filterOption: string): Promise<boolean> {
   console.log(`Within safeClickBooleanWithScreenShot method`);
-
-  let filterOptionToPass: string = filterOption;
 
   let attempts: number = 0;
   while (attempts < 3) {
     try {
-      await this.smoothScrollToElement(this.productListingPage.getFilterHeaderByTypeAndName(filterName));
+      await this.smoothScrollToElement(this.productListingPage.getFilterByTypeAndName(filterName, filterOption));
 
       try {
         await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
@@ -228,31 +305,21 @@ async safeClickBooleanWithScreenShot(locatorr: Locator, filterName: string, filt
         console.log(`Could not find more button`);
       }
 
-      let element: Locator = locatorr;
-      await element.click();
+      await locatorr.click();
 
-      await this.smoothScrollToElement(this.productListingPage.getFilterHeaderByTypeAndName(filterName));
+      console.log(`Clicked the element using safe click, element is ${locatorr}`);
+      await this.capture(this.testInfo, filterOption);
 
-      try {
-        await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
-      } catch (error) {
-        console.log(`Could not find more button`);
-      }
-
-      await this.smoothScrollToElement(this.productListingPage.getAppliedFilterByTypeAndName(filterName, filterOption));
-
-      console.log(`Clicked the element using safe click, element is ${element}`);
-      await this.capture(this.testInfo, filterOptionToPass);
       return true; // success
     } catch (error) {
+      console.error(`Actual error: ${error}`);
       console.log(`Retrying click for: ${locatorr} - Attempt ${attempts + 1}`);
       attempts++;
 
       try {
         await this.page.reload();
 
-        console.log(`Cannot apply filter, taking failed screenshot for -> ${filterOption}`);
-        await this.smoothScrollToElement(this.productListingPage.getFilterHeaderByTypeAndName(filterName));
+        await this.smoothScrollToElement(this.productListingPage.getFilterByTypeAndName(filterName, filterOption));
 
         try {
           await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
@@ -260,16 +327,19 @@ async safeClickBooleanWithScreenShot(locatorr: Locator, filterName: string, filt
           console.log(`Could not find more button`);
         }
 
-        await this.capture(this.testInfo, filterOptionToPass, "failed filter apply screenshot-");
+        await this.capture(this.testInfo, filterOption, "failed filter apply screenshot-");
 
         console.log(`Refreshing the page, while trying to click -> ${locatorr}`);
-      } catch (error) {}
+      } catch (error) {
+        console.error(`Actual error: ${error}`);
+      }
     }
   }
 
   console.log(`Skipping click action: Element not clickable after ${attempts} attempts - ${locatorr}`);
   return false;
 }
+
 
 
         async capture(testInfo: TestInfo, ...names: string[]): Promise<string> {

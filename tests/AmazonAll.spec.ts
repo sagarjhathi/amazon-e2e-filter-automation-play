@@ -7,19 +7,25 @@ import BrandFilterFlows from "../flows/BrandFilterFlows"
 
 test('Verifying brands filter application', async ({ page }, testInfo) => {
 
+  await page.addInitScript(() => {
+  Object.defineProperty(navigator, 'webdriver', { get: () => false });
+});
+
   let landingPage = new AmazonLandingPage(page);
   let capHandler = new CaptchaHandler(page);
   let productPage = new ProductListingPage(page);
-  let genericUtility = new GenericUtility(page);
-  let brandFilterFlows = new BrandFilterFlows(page);
+  let genericUtility = new GenericUtility(page,testInfo);
+  let brandFilterFlows = new BrandFilterFlows(page,testInfo);
 
   const testName: string = testInfo.title;
-
+  
   await landingPage.openingLandingPage();
-  await capHandler.handleCaptcha();
+  await capHandler.handleCaptcha(page);
+  await genericUtility.refreshIfServiceUnavailable();
   await landingPage.givingInputWithinSearchBar('Mobile');
   await landingPage.clickingOnSubmitSearchButton();
-  await genericUtility.refreshIfServiceUnavailable();
+  
+ 
 
   if (!(await productPage.filterCheckUnderList("brands"))) {
     console.warn(`[${testName}] Filter option 'brands' does not exist in the list. Skipping the test.`);
@@ -27,6 +33,7 @@ test('Verifying brands filter application', async ({ page }, testInfo) => {
   }
 
   let filterOptions: Locator[] = (await productPage.listBrandsOptionsByNew.all());
+  console.log(`The filteroptions count is ${filterOptions.length}`);
   let allResults: Map<string, string | number | boolean | string[] | null>[];
 
   if (filterOptions.length == 0) {
