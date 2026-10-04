@@ -46,7 +46,7 @@ Many personal automation projects test an application the author controls, with 
 
 **It is built for an unfriendly target.** Amazon returns captcha pages, "Service Unavailable" pages, and different page layouts for the same search. The code detects these situations and reacts to them instead of failing blindly. See [Dealing with a site that pushes back](#dealing-with-a-site-that-pushes-back).
 
-**Run size depends on what triggered the run.** A push or a pull request runs a small sample for fast feedback. A scheduled run covers every filter option and every product. The same code does both, driven by environment variables, with a startup log that states which mode was chosen and why. See [Controlling how much is tested](#controlling-how-much-is-tested).
+**Run size depends on what triggered the run.** A push or a pull request runs a small sample for fast feedback. The weekly scheduled run uses a wider sample: 3 filter options and 5 products each. The same code does both, driven by environment variables, with a startup log that states which mode was chosen and why. See [Controlling how much is tested](#controlling-how-much-is-tested).
 
 **It has a flow layer between pages and tests.** Beyond the usual page objects, a `flows` folder holds the multi-step journeys that span several pages and tabs (apply a filter, open products, collect results, clear the filter). Tests stay short and read like a description of intent.
 
@@ -137,8 +137,8 @@ Each layer only calls the layer below it.
 
 | Mode | When it is chosen | Filter options | Products per option |
 |---|---|---|---|
-| standard | Push, pull request, manual run, or any local run | First 5 | First 5 |
-| cron | `GITHUB_EVENT_NAME=schedule`, or `IS_CRON=true` | All | All |
+| standard | Push, pull request, manual run, or any local run | First 5 | First 3 |
+| cron | `GITHUB_EVENT_NAME=schedule`, or `IS_CRON=true` | First 3 | First 5 |
 
 Each value can be overridden with an environment variable.
 
@@ -192,8 +192,8 @@ None of this guarantees a clean run. See [Known limitations](#known-limitations)
 |---|---|
 | Push to `master` | standard mode |
 | Pull request into `master` | standard mode |
-| Nightly at 21:00 UTC (02:30 IST) | cron mode, full coverage |
-| Manual run | standard mode, or full coverage when the `full_run` box is ticked |
+| Weekly, Sundays at 21:00 UTC (Monday 02:30 IST) | cron mode (3 filter options, 5 products each) |
+| Manual run | standard mode, or cron mode when the `full_run` box is ticked |
 
 The pipeline has three stages:
 
@@ -256,7 +256,7 @@ IS_CRON=true npx playwright test
 ### Run a larger sample without full coverage
 
 ```bash
-FILTER_OPTIONS_COUNT=10 PRODUCTS_COUNT=3 npx playwright test
+FILTER_OPTIONS_COUNT=10 PRODUCTS_COUNT=8 npx playwright test
 ```
 
 ## Configuration reference
@@ -290,5 +290,5 @@ The seven specification tests are nearly identical today. Turning them into one 
 - **Missing filters end a test as a pass.** If a filter does not appear in the left navigation, the test logs a warning and returns, and the report shows it as passed. Check the logs when a run is suspiciously fast.
 - **Locators depend on Amazon's markup.** Many locators use class names and text. Amazon can change them at any time, and the suite will need updating.
 - **Results depend on live data.** The products, filters and options change from run to run, so the sampled items differ each time.
-- **Coverage is a sample in standard mode.** Only the first filter options and products are checked unless the run is in cron mode or limits are raised.
+- **Coverage is a sample in both modes.** Standard mode checks the first 5 filter options and 3 products, cron mode the first 3 and 5. Nothing runs every option unless the limits are raised with the environment variables.
 - **Use the live site sparingly.** Respect Amazon's terms of use, and do not run the suite in a loop.

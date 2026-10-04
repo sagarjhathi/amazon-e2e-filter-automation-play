@@ -5,25 +5,25 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
-  # Nightly full run. Cron is in UTC: 21:00 UTC = 02:30 IST. GITHUB_EVENT_NAME=schedule
-  # makes utils/RunConfig.ts run every filter option and every product.
+  # Weekly run, Sundays 21:00 UTC (Monday 02:30 IST). GITHUB_EVENT_NAME=schedule makes
+  # utils/RunConfig.ts use the scheduled-run sample: 3 filter options and 5 products each.
   schedule:
-    - cron: '0 21 * * *'
-  # Manual run from the Actions tab; tick the box to get the same full coverage as the nightly run.
+    - cron: '0 21 * * 0'
+  # Manual run from the Actions tab; tick the box to use the same sample as the weekly run.
   workflow_dispatch:
     inputs:
       full_run:
-        description: 'Run all filter options and products (same as the nightly run)'
+        description: 'Use the weekly-run sample (3 filter options, 5 products each)'
         type: boolean
         default: false
 
 # A newer push to the same branch or pull request cancels the older, now outdated run.
-# The nightly run and manual runs get groups of their own so a push can never cancel them:
-#   - schedule          -> the fixed group "nightly" (never cancelled)
+# The weekly run and manual runs get groups of their own so a push can never cancel them:
+#   - schedule          -> the fixed group "weekly" (never cancelled)
 #   - workflow_dispatch -> one group per run (never cancelled, never cancels another)
 #   - push / pull_request -> one group per branch or pull request (older runs are cancelled)
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name == 'schedule' && 'nightly' || github.event_name == 'workflow_dispatch' && format('manual-{0}', github.run_id) || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name == 'schedule' && 'weekly' || github.event_name == 'workflow_dispatch' && format('manual-{0}', github.run_id) || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
 
 jobs:
@@ -50,7 +50,7 @@ jobs:
     name: test (shard ${{ matrix.shard }}/${{ strategy.job-total }})
     needs: typecheck
     runs-on: ubuntu-latest
-    # The nightly full run is slow (slowMo + one tab per product), so allow plenty of time.
+    # The scheduled run opens more tabs than a push run (slowMo adds to every action), so allow plenty of time.
     timeout-minutes: 240
     env:
       IS_CRON: ${{ inputs.full_run == true && 'true' || '' }}

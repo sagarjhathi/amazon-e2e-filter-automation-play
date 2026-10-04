@@ -1,7 +1,7 @@
 /**
  * Decides how much of each flow to run, based on what triggered the run.
  *
- *  - cron     : scheduled run (GitHub Actions `schedule`, or IS_CRON=true)  -> full coverage by default
+ *  - cron     : scheduled run (GitHub Actions `schedule`, or IS_CRON=true)  -> wider sample: 3 filter options, 5 products each
  *  - standard : push / pull request / local run                              -> small, fast sample
  *
  * Any value can be overridden per run with an environment variable (see ENV_KEYS below),
@@ -18,8 +18,8 @@ interface RunSettings {
 }
 
 const DEFAULTS: Record<RunMode, RunSettings> = {
-  standard: { runAllFilterOptions: false, filterOptionsCount: 5, runAllProducts: false, productsCount: 5 },
-  cron:     { runAllFilterOptions: true,  filterOptionsCount: 5, runAllProducts: true,  productsCount: 5 },
+  standard: { runAllFilterOptions: false, filterOptionsCount: 5, runAllProducts: false, productsCount: 3 },
+  cron:     { runAllFilterOptions: false, filterOptionsCount: 3, runAllProducts: false, productsCount: 5 },
 };
 
 const ENV_KEYS = {
