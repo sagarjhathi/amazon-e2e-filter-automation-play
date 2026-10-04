@@ -177,7 +177,7 @@ None of this guarantees a clean run. See [Known limitations](#known-limitations)
 ## Reporting and debugging
 
 - **HTML report.** `npx playwright show-report`.
-- **Trace.** Kept for failed tests and retries. Open one with `npx playwright show-trace <path-to-trace.zip>`.
+- **Trace.** In CI one trace is kept per failing test (first failure only, without the screenshot filmstrip), because traces were by far the largest part of the artifacts. Locally the full trace is kept for failures and retries. Open one with `npx playwright show-trace <path-to-trace.zip>`, or from the failed test in the HTML report.
 - **Video.** Recorded for every test.
 - **Screenshots.** Captured at risky steps, and of a product tab that failed to load.
 - **Logs.** Every message is prefixed with the test name. When a product page does not load, the warning includes the tab's URL and title, which tells you whether you got a product page, a captcha, or an error page.
@@ -197,7 +197,7 @@ None of this guarantees a clean run. See [Known limitations](#known-limitations)
 The pipeline has three stages:
 
 1. **typecheck** runs `tsc` once. A type error stops the run before any browser starts.
-2. **test** runs as four parallel jobs (shards). Playwright splits the tests between them, so each shard runs about a quarter of the suite on its own machine. Every shard installs Chromium, runs its share, and uploads a blob report and its own `test-results` folder (traces, screenshots, video). A failing shard does not cancel the others.
+2. **test** runs as four parallel jobs (shards). Playwright splits the tests between them, so each shard runs about a quarter of the suite on its own machine. Every shard installs Chromium, runs its share, and uploads one blob report, which carries its traces, screenshots and videos. A failing shard does not cancel the others.
 3. **merge-reports** combines the four blob reports into the single HTML report, uploaded as the `playwright-report` artifact.
 
 In CI each shard uses 2 workers by default (override with `PW_WORKERS`) and retries failing tests twice. The log shows live progress through the `list` reporter. For how tests are assigned to shards, how to choose which tests run on which machine, and every setting that affects run time, see [docs/ci-and-sharding.md](docs/ci-and-sharding.md).
@@ -271,7 +271,7 @@ Settings in `playwright.config.ts`:
 | `fullyParallel` | true | Tests may run in parallel locally. |
 | `retries` | 2 in CI, 0 locally | Absorbs transient failures in CI only. |
 | `workers` | 2 per shard in CI (`PW_WORKERS`) | Matches the 2-CPU hosted runner; more workers would slow each test down and send more traffic from one address. |
-| `trace` | on failure and retries | Debugging evidence without recording every pass. |
+| `trace` | CI: first failure only, no screenshot filmstrip; local: on failure and retries | Debugging evidence without recording every pass. Traces were the largest artifact, several GB per run. |
 | `video` | `retain-on-failure` in CI, `on` locally | Recording every test in CI made the blob reports large enough to fill the merge runner's disk. In CI only failed tests keep their video. |
 | `headless` | true | Needed on CI. Use `--headed` to watch locally. |
 

@@ -77,14 +77,6 @@ jobs:
           path: blob-report/
           retention-days: 1
 
-      - name: Upload traces, screenshots and videos
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-${{ matrix.shard }}
-          path: test-results/
-          retention-days: 14
-
   # Combines the per-shard blob reports into the single HTML report.
   merge-reports:
     name: merge reports
