@@ -1,17 +1,15 @@
-import { test , Locator, expect, Page, TestInfo } from "@playwright/test";
+import { Locator, Page, TestInfo } from "@playwright/test";
 import ProductListingPage from "../pages/ProductListingPage";
 import GenericUtility from "../utils/GenericUtility";
 import RunConfig from "../utils/RunConfig";
 
 class SharedFilterFlows {
 
-    private page:Page;
 	private genericUtility:GenericUtility;
 	private productPage :ProductListingPage;
     private testInfo:TestInfo;
 
 	 constructor(page:Page,testInfo:TestInfo) {
-		this.page=page;
         this.testInfo=testInfo;
 		this.productPage= new ProductListingPage(page);
 		this.genericUtility = new GenericUtility(page,testInfo);
@@ -29,7 +27,6 @@ class SharedFilterFlows {
 		let filterOptions : Locator[] = await(filterOptionsBy.all());
 		let results:Map<string, string | number | boolean | null | string[]>[] =[];
 
-		// safeFindElements returns null (not an empty list) once it exhausts its own retries.
 		if (filterOptions.length==0) {
 			console.warn(`[${testName}] No filter options found for locator -> ${filterOptionsBy}`);
 			return results;
@@ -38,40 +35,9 @@ class SharedFilterFlows {
 		console.log(`[${testName}] Within applyFilterAndValidateProductsWithResult filterOptions size is -> ${filterOptions.length}`);
 
 
-		// boolean isCron = Boolean.parseBoolean(System.getenv("IS_CRON"));
 
 
 		const filterOptionSize :number = RunConfig.filterOptionLimit(filterOptions.length);
-		// if(isCron) {
-
-		// 	log.info("[{}] Execution is scheduled type /CRON Job on CI Hence refering to CI keys from UtilData", ThreadContext.get("testName"));
-
-		// 	System.out.println("Execution is scheduled type /CRON Job on CI Hence refering to CI keys from UtilData");
-
-		// 	boolean runAll= ConfigManager.getBoolean("runForAllFilterOptionsCI", false);
-		// 	System.out.println("runAll is"+runAll);
-		// 	if(runAll==false) {
-		// 		int overideFilteOptionsCountDefault=ConfigManager.getInt("overideFilteOptionsCountDefault");
-		// 		filterOptionSize=ConfigManager.getInt("overideFilteOptionsCount", overideFilteOptionsCountDefault);
-		// 		System.out.println(filterOptionSize +" is the  filterOptionSize");
-		// 	}
-
-
-		// }else {
-
-		// 	log.info("[{}] Execution is Not CRON Job Hence refering to normal keys from UtilData", ThreadContext.get("testName"));
-
-	    // 	System.out.println("Execution is Not CRON Job Hence refering to normal keys from UtilData");
-
-		//     boolean runAll= ConfigManager.getBoolean("runForAllFilterOptions", false);
-	    //  	if(runAll==false) {
-	    //  	int overideFilteOptionsCountDefault=ConfigManager.getInt("overideFilteOptionsCountDefault");
-		// 	filterOptionSize=ConfigManager.getInt("overideFilteOptionsCount", overideFilteOptionsCountDefault);
-		// 	System.out.println(filterOptionSize +" is the  filterOptionSize");
-		//    }
-
-
-		// }
 
 
 
@@ -87,10 +53,6 @@ class SharedFilterFlows {
 
 			let filterValue :string =  (await filterOptionsBy.nth(filterOption).innerText()).trim();
 
-			// if (!safeAct.safeClickBooleanWithScreenShot(productPage.getfilterByTypeAndName(filterName, filterValue),filterName,filterValue)) {
-			// 	System.out.println("Filter click failed for: " + filterValue + ". Skipping this filter option.");
-			// 	continue;
-			// }
 
             try {
   await this.genericUtility.moveMouseLikeHuman(this.productPage.getFilterByTypeAndName(filterName, filterValue).first());
@@ -109,30 +71,6 @@ class SharedFilterFlows {
 			let productNameListingPageSize = RunConfig.productLimit(productNameListingPage.length);
 
 
-			// if(isCron) {
-			// 	log.info("[{}] Execution is scheduled type /CRON Job on CI Hence refering to CI keys from UtilData", ThreadContext.get("testName"));
-
-			// 	boolean runAllProducts= ConfigManager.getBoolean("runForAllProductsUnderListingCI", false);
-			// 	if(runAllProducts==false) {
-			// 		int overideProductsListingCountDefault=ConfigManager.getInt("overideProductsListingCountDefault");
-			// 		productNameListingPageSize=ConfigManager.getInt("overideProductsListingCount", overideProductsListingCountDefault);
-			// 		System.out.println(productNameListingPageSize +" is the  overideProductsListingCount");
-			// 		log.info("[{}] Limiting traversal to in-loop size to prevent IndexOutOfBoundsException in applyFilterAndValidateProductsWithResult", ThreadContext.get("testName"));
-
-			// 	}
-			// }else {
-
-			// 	log.info("[{}] Execution is Not CRON Job Hence refering to normal keys from UtilData", ThreadContext.get("testName"));
-
-			// 	boolean runAllProducts= ConfigManager.getBoolean("runForAllProductsUnderListing", false);
-			// 	if(runAllProducts==false) {
-
-			// 		int overideProductsListingCountDefault=ConfigManager.getInt("overideProductsListingCountDefault");
-
-			// 		productNameListingPageSize=ConfigManager.getInt("overideProductsListingCount", overideProductsListingCountDefault);
-			// 		System.out.println(productNameListingPageSize +" is the  overideProductsListingCount");
-			// 	}
-			// }
 
 
 
@@ -194,10 +132,8 @@ try {
 
 	let productElement :Locator = this.productPage.getProductByIndex(productIndex);
 	await this.genericUtility.smoothScrollToElement(productElement);
-  //  await productElement.click();
 	console.log(`[${testName}] Getting product by index in productNameListingPage loop`);
 
-   // let isWindowOpened: boolean = await this.genericUtility.openClickOnNewPage(productElement);
     page2 = await this.genericUtility.openAndGetNewTab(() => productElement.click());
 
 	await this.genericUtility.moveMouseLikeHuman(productElement);
@@ -275,9 +211,6 @@ try {
 	console.log(`[${testName}] Within catch block for clicking 'see more details' within productNameListingPage loop`);
 
 }finally {
-	// Only close/switch if we actually left the listing window; closeCurrentWindowAndSwitchBack
-	// closes every handle that isn't currentWindow, so calling it while already back on
-	// currentWindow (e.g. click never navigated) would otherwise close all other open windows.
 
     await page2.close();
 	console.log(`[${testName}] Closed the product tab and going back to the product listing`);

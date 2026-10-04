@@ -1,4 +1,4 @@
-import { test , Locator, expect, Page, TestInfo } from "@playwright/test";
+import { Locator, Page, TestInfo } from "@playwright/test";
 import ProductListingPage from "../pages/ProductListingPage";
 import GenericUtility from "../utils/GenericUtility";
 import RunConfig from "../utils/RunConfig";
@@ -13,7 +13,6 @@ class BrandFilterFlows{
 	  private  genericUtility:GenericUtility;
 	
 
-    private testInfo:TestInfo;
 	// Titles often use a shortened form of the brand name (e.g. "Moto g06" for Motorola).
 	private static readonly BRAND_ALIASES: Record<string, string[]> = {
 		motorola: ["moto"],
@@ -34,7 +33,6 @@ class BrandFilterFlows{
 
 	constructor(page:Page,testInfo:TestInfo) {
         this.page=page;
-        this.testInfo=testInfo;
         this.productPage = new ProductListingPage(page);
         this.genericUtility = new GenericUtility(page,testInfo);
     }
@@ -77,7 +75,6 @@ class BrandFilterFlows{
     if (i >= liveCount) {
       console.log(`Avoiding out of bounds — index ${i} exceeds live list size ${liveCount}`);
       return allResults;
-   //   continue;
     }
 
     let str: string = (await filterOptionsBy.nth(i).innerText()).trim();

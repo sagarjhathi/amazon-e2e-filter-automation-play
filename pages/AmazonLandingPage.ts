@@ -1,4 +1,4 @@
-import { Locator, Page ,expect} from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 
 
 
@@ -10,7 +10,6 @@ class AmazonLandingPage{
 	
 	private searchBarLandingPage:Locator; 
 	
-	public amazonLogoLandingPage:Locator; 
 		
 	private submitSearchButton:Locator ;
 		
@@ -19,7 +18,6 @@ class AmazonLandingPage{
     constructor(page:Page){
         this.page=page;
         this.searchBarLandingPage=page.locator("xpath=//input[@placeholder='Search Amazon.in']");
-        this.amazonLogoLandingPage=page.locator("xpath=//a[@id='nav-logo-sprites']");
         this.submitSearchButton=page.locator("xpath=//input[@id='nav-search-submit-button']");
         this.continueShoppingButtonCaptcha=page.locator("//*[translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='continue shopping']");
 

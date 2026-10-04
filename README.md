@@ -53,7 +53,7 @@ Many personal automation projects test an application the author controls, with 
 
 **It handles two versions of the same page.** Amazon serves different markup for the brand filter depending on the session. The test checks which version it received and uses the matching locators.
 
-**Product details are read in a dedicated tab that the code opens itself.** Ctrl+click did not reliably open a new tab in headless Chromium, so the flow reads each product link's address and opens it in a new tab explicitly. The page objects are then rebuilt for that tab, because locators are bound to the page they were created from.
+**Product details are read in a separate tab, with page objects rebuilt for it.** Each product opens in a new browser tab, and the flow creates a second set of page objects and utilities bound to that tab, because locators belong to the page they were created from. The tab is closed after the details are read, whether or not the read succeeded.
 
 **Matching is deliberately tolerant where the data is messy.** Product titles do not always repeat the brand name exactly, so brand matching normalises text and supports aliases. Failures therefore point at real filter problems and not at naming quirks.
 
