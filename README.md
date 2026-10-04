@@ -4,6 +4,7 @@ End-to-end tests for the product filters on Amazon India (amazon.in), written wi
 
 The suite searches for "Mobile", applies each filter option in the left navigation (brand, storage, battery, display, camera, processor speed and others), and then checks that the products shown really match the filter that was applied. It runs against the live site, locally or on GitHub Actions.
 
+
 ## Table of contents
 
 1. [What this project verifies](#what-this-project-verifies)
