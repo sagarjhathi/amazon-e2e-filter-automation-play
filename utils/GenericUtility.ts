@@ -59,10 +59,10 @@ await locator.evaluate((element) => {
 
 
 
-async openAndGetNewTab(triggerAction: () => Promise<void>): Promise<Page> {
+async openAndGetNewTab(triggerAction: () => Promise<void>, timeoutMs?: number): Promise<Page> {
   const context = this.page.context();
   const [newPage] = await Promise.all([
-    context.waitForEvent('page'),
+    context.waitForEvent('page', { timeout: timeoutMs }),
     triggerAction(),
   ]);
   return newPage;

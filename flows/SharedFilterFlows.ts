@@ -5,11 +5,13 @@ import RunConfig from "../utils/RunConfig";
 
 class SharedFilterFlows {
 
+	private page:Page;
 	private genericUtility:GenericUtility;
 	private productPage :ProductListingPage;
     private testInfo:TestInfo;
 
 	 constructor(page:Page,testInfo:TestInfo) {
+		this.page=page;
         this.testInfo=testInfo;
 		this.productPage= new ProductListingPage(page);
 		this.genericUtility = new GenericUtility(page,testInfo);
@@ -128,19 +130,32 @@ class SharedFilterFlows {
  let productResult: Map<string,string |number |boolean |null |string[]> = new Map<string,string |number |boolean |null |string[]>();
  productResult.set("filter", filterValue);
  let page2 :Page | undefined;
+ const listingUrl :string = this.page.url();
 try {
 
 	let productElement :Locator = this.productPage.getProductByIndex(productIndex);
 	await this.genericUtility.smoothScrollToElement(productElement);
 	console.log(`[${testName}] Getting product by index in productNameListingPage loop`);
 
-    page2 = await this.genericUtility.openAndGetNewTab(() => productElement.click());
+    page2 = await this.genericUtility.openAndGetNewTab(() => productElement.click(), 10_000);
 
 	await this.genericUtility.moveMouseLikeHuman(productElement);
 
 
 } catch (error) {
 	console.warn(`[${testName}] Failed to open product index ${productIndex} for filter value -> ${filterValue} — ${error}`);
+
+	// A click that opened no tab may have navigated the listing tab itself to the product page.
+	// Put it back, otherwise the next product index would be read from the wrong page.
+	if (this.page.url() !== listingUrl) {
+		try {
+			console.warn(`[${testName}] Listing tab navigated away to ${this.page.url()}; going back to the listing`);
+			await this.page.goBack();
+			await this.productPage.productNameListingPageBy.first().waitFor({ state: 'visible', timeout: 10_000 });
+		} catch (recoveryError) {
+			console.warn(`[${testName}] Could not return to the product listing — ${recoveryError}`);
+		}
+	}
 }
 
 console.log(`[${testName}] Clicked on the product name, new tab should open`);
@@ -189,15 +204,12 @@ console.log(`[${testName}] Extracting 'name', 'keyFeatures', 'about', 'techDetai
 try {
 	if (productPageLoaded) {
 	
-	if(! await (detailPage.seeMoreProductDetailsButtonIndividualPageBy).isVisible()){
-		await detailUtility.smoothScrollToElement(detailPage.seeMoreProductDetailsButtonIndividualPageBy);
-		await detailPage.seeMoreProductDetailsButtonIndividualPageBy.click();
-     }
-	 else {
-		 if(await detailPage.showMoreOnlyIndividualPage.isVisible()) {
-         await	detailUtility.smoothScrollToElement(detailPage.reportAnIssue);
-	      }
-       }
+		if (await detailPage.seeMoreProductDetailsButtonIndividualPageBy.isVisible()) {
+			await detailUtility.smoothScrollToElement(detailPage.seeMoreProductDetailsButtonIndividualPageBy);
+			await detailPage.seeMoreProductDetailsButtonIndividualPageBy.click();
+		} else if (await detailPage.showMoreOnlyIndividualPage.isVisible()) {
+			await detailUtility.smoothScrollToElement(detailPage.reportAnIssue);
+		}
 	}
 
 } catch (error) {
