@@ -244,7 +244,306 @@ test('verifyingDiscountFilterFunctionality ',async ({page},testInfo)=> {
 
 
 
-		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listBatteryCapacityOptionsBy,"discount");
+		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listDiscountOptionsBy,"discount");
+
+			if(results.length==0) {
+			 expect(results.length>0);
+		}
+		
+
+    		console.log(`[${testName}] Retrieved ${results.length} results from applyFilterAndValidateProductsWithResult.`);
+		
+
+		for (const product of results) {
+			let filter:string = genericUtility.safeLower(product.get("filter"));
+    	let title:string = genericUtility.safeLower(product.get("title"));
+      let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
+      let about :string= genericUtility.safeLower(product.get("about"));
+    	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+
+    	    let isMatch:boolean = title.includes(filter)
+    	                   || keyFeatures.includes(filter)
+    	                   || about.includes(filter)
+    	                   || techDetails.includes(filter);
+
+			if (!isMatch) {
+
+				console.error(`[${testName}] Mismatch found for filter '${filter}' on product '${title}'`);
+				console.debug(`[${testName}] Key Features: ${keyFeatures}`);
+				console.debug(`[${testName}] About: ${about}`);
+				console.debug(`[${testName}] Tech Details: ${techDetails}`);
+
+
+				const failureMessage: string =
+					` filter '${filter}' not found in product details.\n` +
+					`-------------------------------------------------------------\n` +
+					` Title: ${title}\n` +
+					` Key Features: ${keyFeatures}\n` +
+					` About: ${about}\n` +
+					` Tech Details: ${techDetails}\n` +
+					`-------------------------------------------------------------`;
+
+				 expect.soft(false, failureMessage).toBeTruthy();
+			} else {
+				console.log(`[${testName}] Filter '${filter}' matched in at least one section of product details.`);
+			}
+		}
+
+	});
+
+
+
+test('verifyingDisplaySizeFilterFunctionality ',async ({page},testInfo)=> {
+		
+				
+		
+	  let landingPage = new AmazonLandingPage(page);
+  let capHandler = new CaptchaHandler(page);
+  let productPage = new ProductListingPage(page);
+  let genericUtility = new GenericUtility(page,testInfo);
+	let sharedFilterFlows = new SharedFilterFlows(page,testInfo);
+  const testName: string = testInfo.title;
+
+	
+		await landingPage.openingLandingPage();
+		await capHandler.handleCaptcha(page);
+		await landingPage.givingInputWithinSearchBar('Mobile');
+		await genericUtility.moveMouseLikeHuman();
+		await landingPage.clickingOnSubmitSearchButton();
+		await genericUtility.refreshIfServiceUnavailable();
+
+		if (!await(productPage.filterCheckUnderList("Screen Size"))) {
+			console.warn(`[${testName}] Filter option ' Screen Size' does not exist in the list. Skipping the test.`);
+			return ;
+		}
+
+
+
+		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listDisplaySizeOptionsBy,"screensize");
+
+			if(results.length==0) {
+			 expect(results.length>0);
+		}
+		
+
+    		console.log(`[${testName}] Retrieved ${results.length} results from applyFilterAndValidateProductsWithResult.`);
+		
+
+		for (const product of results) {
+			let filter:string = genericUtility.safeLower(product.get("filter"));
+    	let title:string = genericUtility.safeLower(product.get("title"));
+      let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
+      let about :string= genericUtility.safeLower(product.get("about"));
+    	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+
+    	    let isMatch:boolean = title.includes(filter)
+    	                   || keyFeatures.includes(filter)
+    	                   || about.includes(filter)
+    	                   || techDetails.includes(filter);
+
+			if (!isMatch) {
+
+				console.error(`[${testName}] Mismatch found for filter '${filter}' on product '${title}'`);
+				console.debug(`[${testName}] Key Features: ${keyFeatures}`);
+				console.debug(`[${testName}] About: ${about}`);
+				console.debug(`[${testName}] Tech Details: ${techDetails}`);
+
+
+				const failureMessage: string =
+					` filter '${filter}' not found in product details.\n` +
+					`-------------------------------------------------------------\n` +
+					` Title: ${title}\n` +
+					` Key Features: ${keyFeatures}\n` +
+					` About: ${about}\n` +
+					` Tech Details: ${techDetails}\n` +
+					`-------------------------------------------------------------`;
+
+				 expect.soft(false, failureMessage).toBeTruthy();
+			} else {
+				console.log(`[${testName}] Filter '${filter}' matched in at least one section of product details.`);
+			}
+		}
+
+	});
+
+
+
+test('verifyingDisplayTypeFilterFunctionality ',async ({page},testInfo)=> {
+		
+				
+		
+	  let landingPage = new AmazonLandingPage(page);
+  let capHandler = new CaptchaHandler(page);
+  let productPage = new ProductListingPage(page);
+  let genericUtility = new GenericUtility(page,testInfo);
+	let sharedFilterFlows = new SharedFilterFlows(page,testInfo);
+  const testName: string = testInfo.title;
+
+	
+		await landingPage.openingLandingPage();
+		await capHandler.handleCaptcha(page);
+		await landingPage.givingInputWithinSearchBar('Mobile');
+		await genericUtility.moveMouseLikeHuman();
+		await landingPage.clickingOnSubmitSearchButton();
+		await genericUtility.refreshIfServiceUnavailable();
+
+		if (!await(productPage.filterCheckUnderList("Display Type"))) {
+			console.warn(`[${testName}] Filter option ' Display Type' does not exist in the list. Skipping the test.`);
+			return ;
+		}
+
+
+
+		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listDisplayTypeOptionsBy,"displaytype");
+
+			if(results.length==0) {
+			 expect(results.length>0);
+		}
+		
+
+    		console.log(`[${testName}] Retrieved ${results.length} results from applyFilterAndValidateProductsWithResult.`);
+		
+
+		for (const product of results) {
+			let filter:string = genericUtility.safeLower(product.get("filter"));
+    	let title:string = genericUtility.safeLower(product.get("title"));
+      let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
+      let about :string= genericUtility.safeLower(product.get("about"));
+    	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+
+    	    let isMatch:boolean = title.includes(filter)
+    	                   || keyFeatures.includes(filter)
+    	                   || about.includes(filter)
+    	                   || techDetails.includes(filter);
+
+			if (!isMatch) {
+
+				console.error(`[${testName}] Mismatch found for filter '${filter}' on product '${title}'`);
+				console.debug(`[${testName}] Key Features: ${keyFeatures}`);
+				console.debug(`[${testName}] About: ${about}`);
+				console.debug(`[${testName}] Tech Details: ${techDetails}`);
+
+
+				const failureMessage: string =
+					` filter '${filter}' not found in product details.\n` +
+					`-------------------------------------------------------------\n` +
+					` Title: ${title}\n` +
+					` Key Features: ${keyFeatures}\n` +
+					` About: ${about}\n` +
+					` Tech Details: ${techDetails}\n` +
+					`-------------------------------------------------------------`;
+
+				 expect.soft(false, failureMessage).toBeTruthy();
+			} else {
+				console.log(`[${testName}] Filter '${filter}' matched in at least one section of product details.`);
+			}
+		}
+
+	});
+
+
+
+test('verifyingMobilePhonePrimaryCameraResolutionFilterFunctionality ',async ({page},testInfo)=> {
+		
+				
+		
+	  let landingPage = new AmazonLandingPage(page);
+  let capHandler = new CaptchaHandler(page);
+  let productPage = new ProductListingPage(page);
+  let genericUtility = new GenericUtility(page,testInfo);
+	let sharedFilterFlows = new SharedFilterFlows(page,testInfo);
+  const testName: string = testInfo.title;
+
+	
+		await landingPage.openingLandingPage();
+		await capHandler.handleCaptcha(page);
+		await landingPage.givingInputWithinSearchBar('Mobile');
+		await genericUtility.moveMouseLikeHuman();
+		await landingPage.clickingOnSubmitSearchButton();
+		await genericUtility.refreshIfServiceUnavailable();
+
+		if (!await(productPage.filterCheckUnderList("Mobile Phone Primary Camera Resolution"))) {
+			console.warn(`[${testName}] Filter option ' Mobile Phone Primary Camera Resolution' does not exist in the list. Skipping the test.`);
+			return ;
+		}
+
+
+
+		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listMobilePhonePrimaryCameraResolutionOptionsBy,"mobilephoneprimarycameraresolution");
+
+			if(results.length==0) {
+			 expect(results.length>0);
+		}
+		
+
+    		console.log(`[${testName}] Retrieved ${results.length} results from applyFilterAndValidateProductsWithResult.`);
+		
+
+		for (const product of results) {
+			let filter:string = genericUtility.safeLower(product.get("filter"));
+    	let title:string = genericUtility.safeLower(product.get("title"));
+      let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
+      let about :string= genericUtility.safeLower(product.get("about"));
+    	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+
+    	    let isMatch:boolean = title.includes(filter)
+    	                   || keyFeatures.includes(filter)
+    	                   || about.includes(filter)
+    	                   || techDetails.includes(filter);
+
+			if (!isMatch) {
+
+				console.error(`[${testName}] Mismatch found for filter '${filter}' on product '${title}'`);
+				console.debug(`[${testName}] Key Features: ${keyFeatures}`);
+				console.debug(`[${testName}] About: ${about}`);
+				console.debug(`[${testName}] Tech Details: ${techDetails}`);
+
+
+				const failureMessage: string =
+					` filter '${filter}' not found in product details.\n` +
+					`-------------------------------------------------------------\n` +
+					` Title: ${title}\n` +
+					` Key Features: ${keyFeatures}\n` +
+					` About: ${about}\n` +
+					` Tech Details: ${techDetails}\n` +
+					`-------------------------------------------------------------`;
+
+				 expect.soft(false, failureMessage).toBeTruthy();
+			} else {
+				console.log(`[${testName}] Filter '${filter}' matched in at least one section of product details.`);
+			}
+		}
+
+	});
+
+
+test('verifyingProcessorSpeedFilterFunctionality ',async ({page},testInfo)=> {
+		
+				
+		
+	  let landingPage = new AmazonLandingPage(page);
+  let capHandler = new CaptchaHandler(page);
+  let productPage = new ProductListingPage(page);
+  let genericUtility = new GenericUtility(page,testInfo);
+	let sharedFilterFlows = new SharedFilterFlows(page,testInfo);
+  const testName: string = testInfo.title;
+
+	
+		await landingPage.openingLandingPage();
+		await capHandler.handleCaptcha(page);
+		await landingPage.givingInputWithinSearchBar('Mobile');
+		await genericUtility.moveMouseLikeHuman();
+		await landingPage.clickingOnSubmitSearchButton();
+		await genericUtility.refreshIfServiceUnavailable();
+
+		if (!await(productPage.filterCheckUnderList("Processor Speed"))) {
+			console.warn(`[${testName}] Filter option ' Processor Speed' does not exist in the list. Skipping the test.`);
+			return ;
+		}
+
+
+
+		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listProcessorSpeedOptionsBy,"processorspeed");
 
 			if(results.length==0) {
 			 expect(results.length>0);
