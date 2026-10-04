@@ -18,13 +18,10 @@ on:
         default: false
 
 jobs:
-  test:
+  # Runs once, so a type error fails fast instead of failing in every shard.
+  typecheck:
     runs-on: ubuntu-latest
-    # The nightly full run is slow (slowMo + one tab per product), so allow plenty of time.
-    timeout-minutes: 240
-    env:
-      IS_CRON: ${{ inputs.full_run == true && 'true' || '' }}
-
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -39,24 +36,87 @@ jobs:
       - name: Type check
         run: npx tsc -p tsconfig.json
 
+  # One job per shard. Playwright splits the tests between shards by itself (see docs/ci-and-sharding.md).
+  test:
+    name: test (shard ${{ matrix.shard }}/${{ strategy.job-total }})
+    needs: typecheck
+    runs-on: ubuntu-latest
+    # The nightly full run is slow (slowMo + one tab per product), so allow plenty of time.
+    timeout-minutes: 240
+    env:
+      IS_CRON: ${{ inputs.full_run == true && 'true' || '' }}
+    strategy:
+      # Let the other shards finish when one fails, so the merged report is complete.
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
-      - name: Run tests
-        run: npx playwright test
+      - name: Run tests (shard ${{ matrix.shard }}/${{ strategy.job-total }})
+        run: npx playwright test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
 
-      - name: Upload HTML report
+      # Artifact names must be unique per shard or the uploads overwrite each other.
+      - name: Upload blob report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 14
+          name: blob-report-${{ matrix.shard }}
+          path: blob-report/
+          retention-days: 1
 
       - name: Upload traces, screenshots and videos
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: test-results-${{ matrix.shard }}
           path: test-results/
+          retention-days: 14
+
+  # Combines the per-shard blob reports into the single HTML report.
+  merge-reports:
+    name: merge reports
+    needs: test
+    # Still merge when a shard failed; skip only when the tests never ran (for example a type error).
+    if: ${{ !cancelled() && needs.test.result != 'skipped' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+
+      - name: Merge into one HTML report
+        run: npx playwright merge-reports --reporter html ./all-blob-reports
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
           retention-days: 14

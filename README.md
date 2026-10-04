@@ -68,7 +68,7 @@ Many personal automation projects test an application the author controls, with 
 | Test runner | Playwright Test |
 | Language | TypeScript (strict mode) |
 | Browser | Chromium |
-| Reporting | Playwright HTML report, traces, video |
+| Reporting | Playwright HTML report (merged from per-shard blob reports in CI), traces, video |
 | CI | GitHub Actions |
 | Runtime | Node.js (CI uses version 22) |
 
@@ -76,7 +76,8 @@ Many personal automation projects test an application the author controls, with 
 
 ```
 .
-|-- .github/workflows/playwright.yml   CI pipeline
+|-- .github/workflows/playwright.yml   CI pipeline (type check, 4 shards, report merge)
+|-- docs/ci-and-sharding.md            Internal reference: sharding, test selection, runners, settings
 |-- flows/
 |   |-- BrandFilterFlows.ts            Brand filter journey and brand validation
 |   `-- SharedFilterFlows.ts           Generic filter journey for the specification filters
@@ -192,7 +193,13 @@ None of this guarantees a clean run. See [Known limitations](#known-limitations)
 | Nightly at 21:00 UTC (02:30 IST) | cron mode, full coverage |
 | Manual run | standard mode, or full coverage when the `full_run` box is ticked |
 
-The job installs dependencies with `npm ci`, type-checks with `tsc`, installs Chromium, runs the tests, and uploads the HTML report and the `test-results` folder (traces, screenshots, video) as artifacts. In CI the runner uses one worker and retries failing tests twice.
+The pipeline has three stages:
+
+1. **typecheck** runs `tsc` once. A type error stops the run before any browser starts.
+2. **test** runs as four parallel jobs (shards). Playwright splits the tests between them, so each shard runs about a quarter of the suite on its own machine. Every shard installs Chromium, runs its share, and uploads a blob report and its own `test-results` folder (traces, screenshots, video). A failing shard does not cancel the others.
+3. **merge-reports** combines the four blob reports into the single HTML report, uploaded as the `playwright-report` artifact.
+
+In CI each shard uses 2 workers by default (override with `PW_WORKERS`) and retries failing tests twice. The log shows live progress through the `list` reporter. For how tests are assigned to shards, how to choose which tests run on which machine, and every setting that affects run time, see [docs/ci-and-sharding.md](docs/ci-and-sharding.md).
 
 ## Getting started
 
@@ -262,7 +269,7 @@ Settings in `playwright.config.ts`:
 | `slowMo` | 1200 ms | Slows every action so the traffic looks less automated. |
 | `fullyParallel` | true | Tests may run in parallel locally. |
 | `retries` | 2 in CI, 0 locally | Absorbs transient failures in CI only. |
-| `workers` | 1 in CI | Keeps CI traffic to the site low. |
+| `workers` | 2 per shard in CI (`PW_WORKERS`) | Matches the 2-CPU hosted runner; more workers would slow each test down and send more traffic from one address. |
 | `trace` | on failure and retries | Debugging evidence without recording every pass. |
 | `video` | on | Records every test. |
 | `headless` | true | Needed on CI. Use `--headed` to watch locally. |
