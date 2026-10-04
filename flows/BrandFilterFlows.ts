@@ -1,6 +1,7 @@
 import { test , Locator, expect, Page, TestInfo } from "@playwright/test";
 import ProductListingPage from "../pages/ProductListingPage";
 import GenericUtility from "../utils/GenericUtility";
+import RunConfig from "../utils/RunConfig";
 
 
 class BrandFilterFlows{
@@ -54,12 +55,7 @@ class BrandFilterFlows{
     return [];
   }
 
-  let filterOptionSize: number = filterOptions.length;
-
-  let runAll: boolean = false;
-  if (runAll == false) {
-    filterOptionSize = 10;
-  }
+  const filterOptionSize: number = RunConfig.filterOptionLimit(filterOptions.length);
 
   let allResults: Map<string, string | number | boolean | null | string[]>[] = [];
 

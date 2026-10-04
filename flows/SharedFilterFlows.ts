@@ -1,6 +1,7 @@
 import { test , Locator, expect, Page, TestInfo } from "@playwright/test";
 import ProductListingPage from "../pages/ProductListingPage";
 import GenericUtility from "../utils/GenericUtility";
+import RunConfig from "../utils/RunConfig";
 
 class SharedFilterFlows {
 
@@ -40,8 +41,7 @@ class SharedFilterFlows {
 		// boolean isCron = Boolean.parseBoolean(System.getenv("IS_CRON"));
 
 
-		let filterOptionSize :number= filterOptions.length;
-		filterOptionSize=3;
+		const filterOptionSize :number = RunConfig.filterOptionLimit(filterOptions.length);
 		// if(isCron) {
 
 		// 	log.info("[{}] Execution is scheduled type /CRON Job on CI Hence refering to CI keys from UtilData", ThreadContext.get("testName"));
@@ -95,7 +95,7 @@ class SharedFilterFlows {
             try {
   await this.genericUtility.moveMouseLikeHuman(this.productPage.getFilterByTypeAndName(filterName, filterValue).first());
   await this.productPage.getFilterByTypeAndName(filterName, filterValue).click();
-  await this.genericUtility.smoothScrollToElement(this.productPage.getFilterByTypeAndName(filterName,filterValue));
+  await this.genericUtility.smoothScrollToElement(this.productPage.getAppliedFilterByTypeAndName(filterName,filterValue));
   await this.genericUtility.capture(this.testInfo);
 } catch (error) {
   console.warn(`[${testName}] Filter click failed for: ${filterValue} — ${error}`);
@@ -106,7 +106,7 @@ class SharedFilterFlows {
 
 
 			let productNameListingPage :Locator[] = await (this.productPage.productNameListingPageBy.all());
-			let productNameListingPageSize=productNameListingPage.length;
+			let productNameListingPageSize = RunConfig.productLimit(productNameListingPage.length);
 
 
 			// if(isCron) {
@@ -138,7 +138,7 @@ class SharedFilterFlows {
 
 
 
-			for (let productIndex = 0; productIndex <5; productIndex++) {
+			for (let productIndex = 0; productIndex <productNameListingPageSize; productIndex++) {
 
 
 
