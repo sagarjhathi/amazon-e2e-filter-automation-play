@@ -49,7 +49,7 @@ async refreshIfServiceUnavailable() {
 
 
     
-    async smoothScrollToElement(locator :Locator) {
+async smoothScrollToElement(locator :Locator) {
 
 await locator.evaluate((element) => {
   element.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -133,7 +133,7 @@ async setSliderValue(locator: Locator, value: number): Promise<void> {
   }
 }
 
-    async openClickOnNewPage(element: Locator): Promise<boolean> {
+  async openClickOnNewPage(element: Locator): Promise<boolean> {
   const context = this.page.context();
   const beforeCount = context.pages().length;
 
@@ -163,7 +163,7 @@ async setSliderValue(locator: Locator, value: number): Promise<void> {
 
 
 
-  addFieldIfPresent(key :string,value :string, filterValue :string, productIndex :number, result: Map<string, string | number | boolean | null> ):void {
+  addFieldIfPresent(key :string,value :string, filterValue :string, productIndex :number, result: Map<string, string | number | boolean | null | string[]> ):void {
 
 
 	 if (value.trim().length>0) {
@@ -217,80 +217,6 @@ String() already does, with more code for no extra benefit.
 
 
 
-
-// async safeClickBooleanWithScreenShot(locatorr: Locator, filterName: string, filterOption: string): Promise<boolean> {
-//   console.log(`Within safeClickBooleanWithScreenShot method`);
-
-//   let filterOptionToPass: string = filterOption;
-
-//   let attempts: number = 0;
-//   while (attempts < 3) {
-//     try {
-//       const count = await this.page.locator('//ul[@id=\'filter-p_123\']//span[@class=\'a-size-base a-color-base\']').filter({ hasText: 'Samsung' }).count();
-// console.log(`Matched count: ${count}`);
-//       await this.smoothScrollToElement(this.productListingPage.getFilterByTypeAndName(filterName,filterOption));
-                                                                
-//       try {
-//         await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
-//       } catch (error) {
-//         console.error(`Actual error: ${error}`);
-//         console.log(`Could not find more button`);
-//       }
-
-//       let element: Locator = locatorr;
-//       const countt = await this.page.locator('//ul[@id=\'filter-p_123\']//span[@class=\'a-size-base a-color-base\']').filter({ hasText: 'Samsung' }).count();
-// console.log(`Matched count: ${count}`);
-//       await element.click();
-//        return true; // success
-      
-//       await this.smoothScrollToElement(this.productListingPage.getFilterByTypeAndName(filterName,filterOption));
-
-//       try {
-//         await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
-//       } catch (error) {
-//         console.error(`Actual error: ${error}`);
-//         console.log(`Could not find more button`);
-//       }
-
-//       await this.smoothScrollToElement(this.productListingPage.getAppliedFilterByTypeAndName(filterName, filterOption));
-//        return true; // success
-//       console.log(`Clicked the element using safe click, element is ${element}`);
-//       await this.capture(this.testInfo, filterOptionToPass);
-     
-//     } catch (error) {
-//       console.error(`Actual error: ${error}`);
-//       console.log(`Retrying click for: ${locatorr} - Attempt ${attempts + 1}`);
-//       attempts++;
-
-//       try {
-//         await this.page.reload();
-
-//         console.log(`Cannot apply filter, taking failed screenshot for -> ${filterOption}`);
-//         await this.smoothScrollToElement(this.productListingPage.getFilterByTypeAndName(filterName,filterOption));
-
-//         try {
-//           await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
-//         } catch (error) {
-//           console.error(`Actual error: ${error}`);
-//           console.log(`Could not find more button`);
-//         }
-
-//         await this.capture(this.testInfo, filterOptionToPass, "failed filter apply screenshot-");
-
-//         console.log(`Refreshing the page, while trying to click -> ${locatorr}`);
-//       } catch (error) {
-//         console.error(`Actual error: ${error}`);
-//       }
-//     }
-//   }
-
-//   console.log(`Skipping click action: Element not clickable after ${attempts} attempts - ${locatorr}`);
-//   return false;
-// }
-
-
-
-
 async safeClickBooleanWithScreenShot(locatorr: Locator, filterName: string, filterOption: string): Promise<boolean> {
   console.log(`Within safeClickBooleanWithScreenShot method`);
 
@@ -300,7 +226,7 @@ async safeClickBooleanWithScreenShot(locatorr: Locator, filterName: string, filt
       await this.smoothScrollToElement(this.productListingPage.getFilterByTypeAndName(filterName, filterOption));
 
       try {
-        await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
+      //  await this.clickMoreButtonIfPresent(this.productListingPage.getMoreButtonByFilterTypeAndName(filterName));
       } catch (error) {
         console.log(`Could not find more button`);
       }
@@ -338,6 +264,44 @@ async safeClickBooleanWithScreenShot(locatorr: Locator, filterName: string, filt
 
   console.log(`Skipping click action: Element not clickable after ${attempts} attempts - ${locatorr}`);
   return false;
+}
+
+
+
+/**
+ * Moves the mouse along a few random points and pauses briefly, so activity between actions
+ * looks less mechanical. Pass a locator to end the movement over that element.
+ */
+async moveMouseLikeHuman(target?: Locator): Promise<void> {
+  try {
+    const viewport = this.page.viewportSize() ?? { width: 1280, height: 720 };
+    const randomBetween = (min: number, max: number): number => min + Math.random() * (max - min);
+
+    const waypoints: number = Math.floor(randomBetween(2, 5));
+    for (let i = 0; i < waypoints; i++) {
+      await this.page.mouse.move(
+        randomBetween(0, viewport.width),
+        randomBetween(0, viewport.height),
+        { steps: Math.floor(randomBetween(8, 25)) }
+      );
+    }
+
+    if (target) {
+      const box = await target.boundingBox();
+      if (box) {
+        await this.page.mouse.move(
+          box.x + box.width * randomBetween(0.3, 0.7),
+          box.y + box.height * randomBetween(0.3, 0.7),
+          { steps: Math.floor(randomBetween(10, 30)) }
+        );
+      }
+    }
+
+    await this.page.waitForTimeout(randomBetween(200, 800));
+  } catch (error) {
+    // Cosmetic only — never let it fail a test
+    console.warn(`Mouse movement skipped: ${error}`);
+  }
 }
 
 

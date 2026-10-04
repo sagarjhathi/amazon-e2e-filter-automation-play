@@ -197,9 +197,13 @@ class ProductListingPage {
             page.locator("//span[@id='productTitle']");
 
 
-        this.productKeyFeatureBlock =
-            page.locator("//div[@class='a-section a-spacing-small a-spacing-top-small']");
+        // this.productKeyFeatureBlock =
+        //     page.locator("//div[@class='a-section a-spacing-small a-spacing-top-small']");
 
+        this.productKeyFeatureBlock =
+            page.locator("//div[@id='productOverview_feature_div']");
+
+           
 
         this.aboutThisItemBulletPoint =
             page.locator("//div[@id='feature-bullets']");
@@ -221,9 +225,13 @@ class ProductListingPage {
             page.locator("//span[@class='a-expander-prompt' and text()='Show More']");
 
 
-        this.reportAnIssue =
-            page.locator("//div[@id='CardInstanceCnrYlcUauBaBV5oi0X1UVw']");
+        // this.reportAnIssue =
+        //     page.locator("//div[@id='CardInstanceCnrYlcUauBaBV5oi0X1UVw']");
 
+            this.reportAnIssue =
+            page.locator("//a[@class='a-link-normal _tell-amazon-desktop_style_tell_amazon_link__1KW5z']");
+
+            
 
         this.showMoreOnlyIndividualPage =
             page.locator("//span[@class='a-expander-prompt' and text()='Show More']");
@@ -420,14 +428,14 @@ class ProductListingPage {
 
 
     public getProductByIndex(index: number): Locator {
-        return this.productNameListingPageBy.nth(index - 1);
+        return this.productNameListingPageBy.nth(index);
     }
 
 
 
 
 public async filterCheckUnderList(filterName1: string, filterName2?: string): Promise<boolean> {
-    await this.listOfFilterNameInLeftNav.nth(0).waitFor();
+  //  await this.listOfFilterNameInLeftNav.nth(0).waitFor();
   const filterNames: string[] = await this.listOfFilterNameInLeftNav.allInnerTexts();
   console.log(filterNames)
   const normalizedNames = await filterNames.map(name => name.trim().toLowerCase());
