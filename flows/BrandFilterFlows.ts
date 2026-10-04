@@ -80,17 +80,13 @@ class BrandFilterFlows{
 
     if (i >= liveCount) {
       console.log(`Avoiding out of bounds — index ${i} exceeds live list size ${liveCount}`);
-      continue;
+      return allResults;
+   //   continue;
     }
 
     let str: string = (await filterOptionsBy.nth(i).innerText()).trim();
 
-    // if (await this.genericUtility.safeClickBooleanWithScreenShot(this.productPage.getFilterByTypeAndName(filterName, str), filterName, str)==false) {
-    //   console.log(`Filter click failed for: ${str}`);
-    //   continue;
-    // }
 
-  //  await this.productPage.getFilterByTypeAndName(filterName, str).click();
 try {
   await this.productPage.getFilterByTypeAndName(filterName, str).click();
 } catch (error) {
