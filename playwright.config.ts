@@ -31,7 +31,7 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
      launchOptions: {
-         // slowMo: 1200, // milliseconds of delay before every Playwright action
+          slowMo: 700, // milliseconds of delay before every Playwright action
     args: ['--disable-blink-features=AutomationControlled'],
   },
     /* Traces are the largest artifact. In CI record one only when a failing test is retried for the first time, without the screenshot filmstrip. Locally keep the full trace on failure and retries. */
