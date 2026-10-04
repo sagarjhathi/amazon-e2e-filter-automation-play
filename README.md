@@ -177,7 +177,7 @@ None of this guarantees a clean run. See [Known limitations](#known-limitations)
 ## Reporting and debugging
 
 - **HTML report.** `npx playwright show-report`.
-- **Trace.** In CI one trace is kept per failing test (first failure only, without the screenshot filmstrip), because traces were by far the largest part of the artifacts. Locally the full trace is kept for failures and retries. Open one with `npx playwright show-trace <path-to-trace.zip>`, or from the failed test in the HTML report.
+- **Trace.** In CI a trace is recorded only when a failing test is retried for the first time (no screenshot filmstrip), because traces were by far the largest part of the artifacts. Locally the full trace is kept for failures and retries. Open one with `npx playwright show-trace <path-to-trace.zip>`, or from the failed test in the HTML report.
 - **Video.** Recorded for every test.
 - **Screenshots.** Captured at risky steps, and of a product tab that failed to load.
 - **Logs.** Every message is prefixed with the test name. When a product page does not load, the warning includes the tab's URL and title, which tells you whether you got a product page, a captcha, or an error page.
@@ -271,7 +271,7 @@ Settings in `playwright.config.ts`:
 | `fullyParallel` | true | Tests may run in parallel locally. |
 | `retries` | 2 in CI, 0 locally | Absorbs transient failures in CI only. |
 | `workers` | 2 per shard in CI (`PW_WORKERS`) | Matches the 2-CPU hosted runner; more workers would slow each test down and send more traffic from one address. |
-| `trace` | CI: first failure only, no screenshot filmstrip; local: on failure and retries | Debugging evidence without recording every pass. Traces were the largest artifact, several GB per run. |
+| `trace` | CI: on the first retry, no screenshot filmstrip; local: on failure and retries | Debugging evidence without recording every pass. Traces were the largest artifact, several GB per run. |
 | `video` | `retain-on-failure` in CI, `on` locally | Recording every test in CI made the blob reports large enough to fill the merge runner's disk. In CI only failed tests keep their video. |
 | `headless` | true | Needed on CI. Use `--headed` to watch locally. |
 

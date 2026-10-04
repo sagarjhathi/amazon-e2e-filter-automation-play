@@ -34,8 +34,8 @@ export default defineConfig({
           slowMo: 1200, // milliseconds of delay before every Playwright action
     args: ['--disable-blink-features=AutomationControlled'],
   },
-    /* Traces are the largest artifact (a run's traces were several GB). In CI keep one trace per failing test, without the screenshot filmstrip. Locally keep the full trace on failure. */
-    trace: process.env.CI ? { mode: 'retain-on-first-failure', screenshots: false } : 'retain-on-failure-and-retries',
+    /* Traces are the largest artifact. In CI record one only when a failing test is retried for the first time, without the screenshot filmstrip. Locally keep the full trace on failure and retries. */
+    trace: process.env.CI ? { mode: 'on-first-retry', screenshots: false } : 'retain-on-failure-and-retries',
      video: process.env.CI ? 'retain-on-failure' : 'on',
     headless:true,
 

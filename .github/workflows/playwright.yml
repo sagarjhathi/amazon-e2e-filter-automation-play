@@ -17,6 +17,15 @@ on:
         type: boolean
         default: false
 
+# A newer push to the same branch or pull request cancels the older, now outdated run.
+# The nightly run and manual runs get groups of their own so a push can never cancel them:
+#   - schedule          -> the fixed group "nightly" (never cancelled)
+#   - workflow_dispatch -> one group per run (never cancelled, never cancels another)
+#   - push / pull_request -> one group per branch or pull request (older runs are cancelled)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'schedule' && 'nightly' || github.event_name == 'workflow_dispatch' && format('manual-{0}', github.run_id) || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+
 jobs:
   # Runs once, so a type error fails fast instead of failing in every shard.
   typecheck:
