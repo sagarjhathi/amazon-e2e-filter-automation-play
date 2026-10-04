@@ -30,7 +30,7 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('')`. */
     // baseURL: 'http://localhost:3000',
      launchOptions: {
-          slowMo: 800, // milliseconds of delay before every Playwright action
+          slowMo: 1200, // milliseconds of delay before every Playwright action
     args: ['--disable-blink-features=AutomationControlled'],
   },
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
