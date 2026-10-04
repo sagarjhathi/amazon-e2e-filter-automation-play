@@ -57,7 +57,7 @@ Many personal automation projects test an application the author controls, with 
 
 **Matching is deliberately tolerant where the data is messy.** Product titles do not always repeat the brand name exactly, so brand matching normalises text and supports aliases. Failures therefore point at real filter problems and not at naming quirks.
 
-**It is designed to be debugged after the fact.** Every run records video and a trace on failure, saves screenshots at risky steps, and logs structured, test-named messages. When a page is not what the test expected, the log says what the tab's URL and title were.
+**It is designed to be debugged after the fact.** Failed tests keep their video and trace (locally every run records video), screenshots are saved at risky steps, and messages are logged with the test name. When a page is not what the test expected, the log says what the tab's URL and title were.
 
 **The design follows an earlier Java and Selenium framework.** The page object and flow structure, and the properties-style control of run size, were carried over and reworked using Playwright idioms (auto-waiting locators, soft assertions, projects, tags).
 
@@ -78,6 +78,7 @@ Many personal automation projects test an application the author controls, with 
 .
 |-- .github/workflows/playwright.yml   CI pipeline (type check, 4 shards, report merge)
 |-- docs/ci-and-sharding.md            Internal reference: sharding, test selection, runners, settings
+|-- docs/github-pages-reports.md       Design note: publishing per-shard reports to GitHub Pages (proposed)
 |-- flows/
 |   |-- BrandFilterFlows.ts            Brand filter journey and brand validation
 |   `-- SharedFilterFlows.ts           Generic filter journey for the specification filters
@@ -271,7 +272,7 @@ Settings in `playwright.config.ts`:
 | `retries` | 2 in CI, 0 locally | Absorbs transient failures in CI only. |
 | `workers` | 2 per shard in CI (`PW_WORKERS`) | Matches the 2-CPU hosted runner; more workers would slow each test down and send more traffic from one address. |
 | `trace` | on failure and retries | Debugging evidence without recording every pass. |
-| `video` | on | Records every test. |
+| `video` | `retain-on-failure` in CI, `on` locally | Recording every test in CI made the blob reports large enough to fill the merge runner's disk. In CI only failed tests keep their video. |
 | `headless` | true | Needed on CI. Use `--headed` to watch locally. |
 
 ## Adding a new filter test

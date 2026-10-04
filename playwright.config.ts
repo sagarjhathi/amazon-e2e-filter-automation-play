@@ -36,7 +36,7 @@ export default defineConfig({
   },
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure-and-retries',
-     video: 'on',
+     video: process.env.CI ? 'retain-on-failure' : 'on',
     headless:true,
 
     /* Max wait for a single action (click, fill, ...) before it fails naming the locator */
