@@ -5,9 +5,14 @@ import CaptchaHandler from "../utils/CaptchaHandler";
 import GenericUtility from "../utils/GenericUtility"
 import BrandFilterFlows from "../flows/BrandFilterFlows"
 import SharedFilterFlows from "../flows/SharedFilterFlows";
-
+import * as allure from 'allure-js-commons';
 
 test('Verifying brands filter application', async ({ page }, testInfo) => {
+
+
+// 	 await allure.epic('Product Filtering');
+//   await allure.feature('Brand filter');
+//   await allure.severity('critical');
 
   await page.addInitScript(() => {
   Object.defineProperty(navigator, 'webdriver', { get: () => false });

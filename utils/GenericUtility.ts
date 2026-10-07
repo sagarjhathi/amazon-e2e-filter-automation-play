@@ -314,6 +314,11 @@ async moveMouseLikeHuman(target?: Locator): Promise<void> {
 
     await this.page.screenshot({ path: filePath });
 
+    await testInfo.attach(inputNames || "screenshot", {
+      path: filePath,
+      contentType: "image/png",
+    });
+    
     return filePath;
   } catch (error) {
     console.error(`Screenshot capture failed: ${error}`);

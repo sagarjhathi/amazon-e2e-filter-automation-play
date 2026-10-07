@@ -8,3 +8,7 @@ node_modules/
 /playwright/.auth/
 /all-blob-reports/
 docs/
+
+# Allure
+allure-results/
+allure-report/
