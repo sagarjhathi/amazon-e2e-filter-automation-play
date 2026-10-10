@@ -26,8 +26,8 @@ class SharedFilterFlows {
 
 
 
-		let filterOptions : Locator[] = await(filterOptionsBy.all());
-		let results:Map<string, string | number | boolean | null | string[]>[] =[];
+		const filterOptions : Locator[] = await(filterOptionsBy.all());
+		const results:Map<string, string | number | boolean | null | string[]>[] =[];
 
 		if (filterOptions.length==0) {
 			console.warn(`[${testName}] No filter options found for locator -> ${filterOptionsBy}`);
@@ -47,13 +47,13 @@ class SharedFilterFlows {
 
 			console.log(`[${testName}] Within filterOptions loop in applyFilterAndValidateProductsWithResult`);
 
-			let inloopParent :Locator[] = await(filterOptionsBy.all());
+			const inloopParent :Locator[] = await(filterOptionsBy.all());
 			if ( filterOption > inloopParent.length - 1) {
 				console.log(`[${testName}] Avoiding out of bounds issue by traversing only up to the in-loop size in applyFilterAndValidateProductsWithResult`);
 				return results;
 			}
 
-			let filterValue :string =  (await filterOptionsBy.nth(filterOption).innerText()).trim();
+			const filterValue :string =  (await filterOptionsBy.nth(filterOption).innerText()).trim();
 
 
             try {
@@ -70,7 +70,7 @@ class SharedFilterFlows {
 
 
 			let productNameListingPage :Locator[] = await (this.productPage.productNameListingPageBy.all());
-			let productNameListingPageSize = RunConfig.productLimit(productNameListingPage.length);
+			const productNameListingPageSize = RunConfig.productLimit(productNameListingPage.length);
 
 
 
@@ -90,7 +90,7 @@ class SharedFilterFlows {
 				console.log(`[${testName}] Within productNameListingPage loop in applyFilterAndValidateProductsWithResult`);
 				console.log(`[${testName}] Inside the loop and product name is ${await productNameListingPage[productIndex].innerText()}`);
 
-				let productResult :Map<string,string | number |boolean |null |string[]> = await this.applyFilterOptionsAndFetchProductDetailsGlobal(productIndex, filterValue);
+				const productResult :Map<string,string | number |boolean |null |string[]> = await this.applyFilterOptionsAndFetchProductDetailsGlobal(productIndex, filterValue);
 				console.log(`[${testName}] Added 'filter','title','keyFeatures', 'about', 'techDetails' into the Map -> productResult`);
 
 				results.push(productResult);
@@ -127,7 +127,7 @@ class SharedFilterFlows {
 
 
 
- let productResult: Map<string,string |number |boolean |null |string[]> = new Map<string,string |number |boolean |null |string[]>();
+ const productResult: Map<string,string |number |boolean |null |string[]> = new Map<string,string |number |boolean |null |string[]>();
  productResult.set("filter", filterValue);
  // Always return the same keys, so a product that did not load has empty values, never missing keys.
  for (const key of ["title", "keyFeatures", "about", "techDetails"]) { productResult.set(key, null); }
@@ -136,7 +136,7 @@ class SharedFilterFlows {
  const listingUrl :string = this.page.url();
 try {
 
-	let productElement :Locator = this.productPage.getProductByIndex(productIndex);
+	const productElement :Locator = this.productPage.getProductByIndex(productIndex);
 	await this.genericUtility.smoothScrollToElement(productElement);
 	console.log(`[${testName}] Getting product by index in productNameListingPage loop`);
 

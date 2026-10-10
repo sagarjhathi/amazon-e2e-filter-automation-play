@@ -11,7 +11,7 @@ class CaptchaHandler {
     }
 
     public async isCaptchaPage(page:Page): Promise<boolean> {
-        let landingPage= new AmazonLandingPage(page);
+        const landingPage= new AmazonLandingPage(page);
         try {
             const bodyText = (await this.page.locator('body').innerText())
                 .toLowerCase();
@@ -26,7 +26,7 @@ class CaptchaHandler {
             }
 
             
-            let buttons :Locator[]=await landingPage.continueShoppingButtonCaptcha.all();
+            const buttons :Locator[]=await landingPage.continueShoppingButtonCaptcha.all();
             return buttons.length>0;
         } catch (e) {
             return false;

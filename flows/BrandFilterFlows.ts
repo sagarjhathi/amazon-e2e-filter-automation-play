@@ -46,7 +46,7 @@ class BrandFilterFlows{
   console.log(`Within applyFilterAndValidateBrandsFilterWithResult method`);
 
 
-  let filterOptions: Locator[] = await (filterOptionsBy.all());
+  const filterOptions: Locator[] = await (filterOptionsBy.all());
 
   if (filterOptions.length === 0) {
     console.warn(`No filter options found for locator -> ${filterOptionsBy}`);
@@ -55,7 +55,7 @@ class BrandFilterFlows{
 
   const filterOptionSize: number = RunConfig.filterOptionLimit(filterOptions.length);
 
-  let allResults: Map<string, string | number | boolean | null | string[]>[] = [];
+  const allResults: Map<string, string | number | boolean | null | string[]>[] = [];
 
   for (let i = 0; i < filterOptionSize; i++) {
     console.log(`Within the filterOptions loop — iteration ${i} of ${filterOptionSize}`);
@@ -77,7 +77,7 @@ class BrandFilterFlows{
       return allResults;
     }
 
-    let str: string = (await filterOptionsBy.nth(i).innerText()).trim();
+    const str: string = (await filterOptionsBy.nth(i).innerText()).trim();
 
 
 try {
@@ -98,10 +98,10 @@ try {
       console.warn(`Results did not refresh within 10s after applying '${str}'`);
     }
 
-    let productNameListingPage: Locator[] = await (this.productPage.productNameListingPageBy.all());
+    const productNameListingPage: Locator[] = await (this.productPage.productNameListingPageBy.all());
 
     let isValid: boolean = true;
-    let mismatchDetails: string[] = [];
+    const mismatchDetails: string[] = [];
 
     if (productNameListingPage.length == 0) {
       isValid = false;
@@ -109,9 +109,9 @@ try {
     } else {
       for (let k = 0; k < productNameListingPage.length; k++) {
     
-        let title: string = await (productNameListingPage[k].innerText());
+        const title: string = await (productNameListingPage[k].innerText());
 
-        let titleMatches: boolean = this.titleMatchesBrand(title, str);
+        const titleMatches: boolean = this.titleMatchesBrand(title, str);
         console.log(`Product index ${k} for brand '${str}' — title: '${title}', matches: ${titleMatches}`);
 
         if (!titleMatches) {
@@ -122,7 +122,7 @@ try {
       }
     }
 
-    let result: Map<string, string | number | boolean | null | string[]> = new Map<string, string | number | boolean | null | string[]>();
+    const result: Map<string, string | number | boolean | null | string[]> = new Map<string, string | number | boolean | null | string[]>();
     result.set("brand", str);
     result.set("isValid", isValid);
     result.set("mismatches", mismatchDetails);

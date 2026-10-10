@@ -22,15 +22,14 @@ class GenericUtility{
   
 async refreshIfServiceUnavailable() {
 
-	   let  pageSource:string = (await this.page.content()).toString().toLowerCase();
-	    let title :string =  (await this.page.title()).toLowerCase();
+	   const  pageSource:string = (await this.page.content()).toString().toLowerCase();
+	    const title :string =  (await this.page.title()).toLowerCase();
 
 	    if (pageSource.includes("service unavailable") ||
 	        pageSource.includes("it's rush hour") ||
 	        title.includes("service unavailable") ||
 	        title.includes("oops")) {
 
-              let LinkBbuttons503Error:Locator[]=await this.page.locator("//a[translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')='go to the amazon.in home page to continue shopping']").all();
 
             // if(LinkBbuttons503Error.length>0){
             //   LinkBbuttons503Error[0].click();
@@ -190,11 +189,10 @@ async setSliderValue(locator: Locator, value: number): Promise<void> {
 
 
 
- /*
-global String() function, which already handles 
-converting every type to a string correctly — so manually 
-narrowing each type yourself would just be re-implementing what 
-String() already does, with more code for no extra benefit.
+/*
+ * Uses the built-in String() function, which already handles 
+ * converting every type to a string correctly, so narrowing each type
+ * by hand would only re-implement what String() already does.
  */
   safeLower(value: unknown): string {
   if (value == null) return "";
@@ -207,11 +205,11 @@ String() already does, with more code for no extra benefit.
 
 	containsCheck(toBeChecked: string, toBeCheckedIn: string): boolean {
 
-  let list: string[] = toBeChecked.split(/\s+/);
+  const list: string[] = toBeChecked.split(/\s+/);
 
   let bool: boolean = true;
   for (let i = 0; i < list.length; i++) {
-    let str: string = list[i];
+    const str: string = list[i];
 
     if (toBeCheckedIn.includes(str)) {
       console.warn(`Text present in containsCheck method, text checked is "${str}"`);

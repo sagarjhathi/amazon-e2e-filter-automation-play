@@ -5,7 +5,6 @@ import CaptchaHandler from "../utils/CaptchaHandler";
 import GenericUtility from "../utils/GenericUtility"
 import BrandFilterFlows from "../flows/BrandFilterFlows"
 import SharedFilterFlows from "../flows/SharedFilterFlows";
-import * as allure from 'allure-js-commons';
 
 test('Verifying brands filter application', async ({ page }, testInfo) => {
 
@@ -18,11 +17,11 @@ test('Verifying brands filter application', async ({ page }, testInfo) => {
   Object.defineProperty(navigator, 'webdriver', { get: () => false });
 });
 
-  let landingPage = new AmazonLandingPage(page);
-  let capHandler = new CaptchaHandler(page);
-  let productPage = new ProductListingPage(page);
-  let genericUtility = new GenericUtility(page,testInfo);
-  let brandFilterFlows = new BrandFilterFlows(page,testInfo);
+  const landingPage = new AmazonLandingPage(page);
+  const capHandler = new CaptchaHandler(page);
+  const productPage = new ProductListingPage(page);
+  const genericUtility = new GenericUtility(page,testInfo);
+  const brandFilterFlows = new BrandFilterFlows(page,testInfo);
 
   const testName: string = testInfo.title;
   
@@ -35,11 +34,10 @@ test('Verifying brands filter application', async ({ page }, testInfo) => {
  
 
   if (!(await productPage.filterCheckUnderList("brands"))) {
-    console.warn(`[${testName}] Filter option 'brands' does not exist in the list. Skipping the test.`);
-    return;
+    testInfo.skip(true, `Filter 'brands' is not in the left navigation; nothing was verified.`);
   }
 
-  let filterOptions: Locator[] = (await productPage.listBrandsOptionsByNew.all());
+  const filterOptions: Locator[] = (await productPage.listBrandsOptionsByNew.all());
   console.log(`The filteroptions count is ${filterOptions.length}`);
   let allResults: Map<string, string | number | boolean | string[] | null>[];
 
@@ -50,13 +48,13 @@ test('Verifying brands filter application', async ({ page }, testInfo) => {
   }
 
   for (const result of allResults) {
-    let isValid: boolean = result.get('isValid') as boolean;
-    let brand: string = result.get("brand") as string;
-    let mismatches: string[] = result.get("mismatches") as string[];
+    const isValid: boolean = result.get('isValid') as boolean;
+    const brand: string = result.get("brand") as string;
+    const mismatches: string[] = result.get("mismatches") as string[];
 
     if (!isValid) {
       console.error(`[${testName}] Brand validation failed for '${brand}'. ${mismatches.length} mismatches found.`);
-      for (let detail of mismatches) {
+      for (const detail of mismatches) {
         console.error(`[${testName}] Mismatch for '${brand}': ${detail}`);
         expect.soft(false, detail).toBeTruthy();
       }
@@ -75,11 +73,11 @@ test('verifyingStorageCapacityFilterFunctionality ', async ({ page }, testInfo) 
 });
 		
 		
-  let landingPage = new AmazonLandingPage(page);
-  let capHandler = new CaptchaHandler(page);
-  let productPage = new ProductListingPage(page);
-  let genericUtility = new GenericUtility(page,testInfo);
-	let sharedFilterFlows = new SharedFilterFlows(page,testInfo);
+  const landingPage = new AmazonLandingPage(page);
+  const capHandler = new CaptchaHandler(page);
+  const productPage = new ProductListingPage(page);
+  const genericUtility = new GenericUtility(page,testInfo);
+	const sharedFilterFlows = new SharedFilterFlows(page,testInfo);
   const testName: string = testInfo.title;
 
 	
@@ -93,28 +91,27 @@ test('verifyingStorageCapacityFilterFunctionality ', async ({ page }, testInfo) 
 		
 		await genericUtility.moveMouseLikeHuman();
 		if (!(await productPage.filterCheckUnderList("Storage Capacity"))) {
-			console.warn(`[${testName}] Filter option 'Storage Capacity' does not exist in the list. Skipping the test.`);
-			return ;
+			testInfo.skip(true, `Filter 'Storage Capacity' is not in the left navigation; nothing was verified.`);
 		}
 
 
-		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listStorageCapacityOptionsBy,"storagecapacity");
+		const results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listStorageCapacityOptionsBy,"storagecapacity");
 		console.log(`[${testName}] Retrieved ${results.length} results from applyFilterAndValidateProductsWithResult.`);
 		
 
 		for (const product of results) {
-			let filter:string = genericUtility.safeLower(product.get("filter"));
-    	let title:string = genericUtility.safeLower(product.get("title"));
-      let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
-      let about :string= genericUtility.safeLower(product.get("about"));
-    	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+			const filter:string = genericUtility.safeLower(product.get("filter"));
+    	const title:string = genericUtility.safeLower(product.get("title"));
+      const keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
+      const about :string= genericUtility.safeLower(product.get("about"));
+    	const techDetails:string = genericUtility.safeLower(product.get("techDetails"));
     	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
     	if (!title && !keyFeatures && !about && !techDetails) {
     		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
     		continue;
     	}
 
-    	    let isMatch:boolean = title.includes(filter)
+    	    const isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
     	                   || about.includes(filter)
     	                   || techDetails.includes(filter);
@@ -154,11 +151,11 @@ test('verifyingBatteryCapacityFilterFunctionality ', async ({ page }, testInfo) 
 });
 		
 		
-  let landingPage = new AmazonLandingPage(page);
-  let capHandler = new CaptchaHandler(page);
-  let productPage = new ProductListingPage(page);
-  let genericUtility = new GenericUtility(page,testInfo);
-	let sharedFilterFlows = new SharedFilterFlows(page,testInfo);
+  const landingPage = new AmazonLandingPage(page);
+  const capHandler = new CaptchaHandler(page);
+  const productPage = new ProductListingPage(page);
+  const genericUtility = new GenericUtility(page,testInfo);
+	const sharedFilterFlows = new SharedFilterFlows(page,testInfo);
   const testName: string = testInfo.title;
 
 	
@@ -172,11 +169,10 @@ test('verifyingBatteryCapacityFilterFunctionality ', async ({ page }, testInfo) 
 	
     await genericUtility.moveMouseLikeHuman();
 		if (!(await productPage.filterCheckUnderList("Battery Capacity"))) {
-			console.warn(`[${testName}] Filter option 'Battery Capacity' does not exist in the list. Skipping the test.`);
-			return ;
+			testInfo.skip(true, `Filter 'Battery Capacity' is not in the left navigation; nothing was verified.`);
 		}
 
-		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listBatteryCapacityOptionsBy,"batterycapacity");
+		const results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listBatteryCapacityOptionsBy,"batterycapacity");
 
 
 
@@ -190,18 +186,18 @@ test('verifyingBatteryCapacityFilterFunctionality ', async ({ page }, testInfo) 
 		
 
 		for (const product of results) {
-			let filter:string = genericUtility.safeLower(product.get("filter"));
-    	let title:string = genericUtility.safeLower(product.get("title"));
-      let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
-      let about :string= genericUtility.safeLower(product.get("about"));
-    	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+			const filter:string = genericUtility.safeLower(product.get("filter"));
+    	const title:string = genericUtility.safeLower(product.get("title"));
+      const keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
+      const about :string= genericUtility.safeLower(product.get("about"));
+    	const techDetails:string = genericUtility.safeLower(product.get("techDetails"));
     	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
     	if (!title && !keyFeatures && !about && !techDetails) {
     		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
     		continue;
     	}
 
-    	    let isMatch:boolean = title.includes(filter)
+    	    const isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
     	                   || about.includes(filter)
     	                   || techDetails.includes(filter);
@@ -237,11 +233,11 @@ test('verifyingDiscountFilterFunctionality ',async ({page},testInfo)=> {
 		
 				
 		
-	  let landingPage = new AmazonLandingPage(page);
-  let capHandler = new CaptchaHandler(page);
-  let productPage = new ProductListingPage(page);
-  let genericUtility = new GenericUtility(page,testInfo);
-	let sharedFilterFlows = new SharedFilterFlows(page,testInfo);
+	  const landingPage = new AmazonLandingPage(page);
+  const capHandler = new CaptchaHandler(page);
+  const productPage = new ProductListingPage(page);
+  const genericUtility = new GenericUtility(page,testInfo);
+	const sharedFilterFlows = new SharedFilterFlows(page,testInfo);
   const testName: string = testInfo.title;
 
 	
@@ -253,13 +249,12 @@ test('verifyingDiscountFilterFunctionality ',async ({page},testInfo)=> {
 		await genericUtility.refreshIfServiceUnavailable();
 
 		if (!await(productPage.filterCheckUnderList("Discount"))) {
-			console.warn(`[${testName}] Filter option ' Discount' does not exist in the list. Skipping the test.`);
-			return ;
+			testInfo.skip(true, `Filter 'Discount' is not in the left navigation; nothing was verified.`);
 		}
 
 
 
-		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listDiscountOptionsBy,"discount");
+		const results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listDiscountOptionsBy,"discount");
 
 			if(results.length==0) {
 			 expect(results.length>0);
@@ -270,18 +265,18 @@ test('verifyingDiscountFilterFunctionality ',async ({page},testInfo)=> {
 		
 
 		for (const product of results) {
-			let filter:string = genericUtility.safeLower(product.get("filter"));
-    	let title:string = genericUtility.safeLower(product.get("title"));
-      let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
-      let about :string= genericUtility.safeLower(product.get("about"));
-    	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+			const filter:string = genericUtility.safeLower(product.get("filter"));
+    	const title:string = genericUtility.safeLower(product.get("title"));
+      const keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
+      const about :string= genericUtility.safeLower(product.get("about"));
+    	const techDetails:string = genericUtility.safeLower(product.get("techDetails"));
     	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
     	if (!title && !keyFeatures && !about && !techDetails) {
     		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
     		continue;
     	}
 
-    	    let isMatch:boolean = title.includes(filter)
+    	    const isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
     	                   || about.includes(filter)
     	                   || techDetails.includes(filter);
@@ -317,11 +312,11 @@ test('verifyingDisplaySizeFilterFunctionality ',async ({page},testInfo)=> {
 		
 				
 		
-	  let landingPage = new AmazonLandingPage(page);
-  let capHandler = new CaptchaHandler(page);
-  let productPage = new ProductListingPage(page);
-  let genericUtility = new GenericUtility(page,testInfo);
-	let sharedFilterFlows = new SharedFilterFlows(page,testInfo);
+	  const landingPage = new AmazonLandingPage(page);
+  const capHandler = new CaptchaHandler(page);
+  const productPage = new ProductListingPage(page);
+  const genericUtility = new GenericUtility(page,testInfo);
+	const sharedFilterFlows = new SharedFilterFlows(page,testInfo);
   const testName: string = testInfo.title;
 
 	
@@ -333,13 +328,12 @@ test('verifyingDisplaySizeFilterFunctionality ',async ({page},testInfo)=> {
 		await genericUtility.refreshIfServiceUnavailable();
 
 		if (!await(productPage.filterCheckUnderList("Screen Size"))) {
-			console.warn(`[${testName}] Filter option ' Screen Size' does not exist in the list. Skipping the test.`);
-			return ;
+			testInfo.skip(true, `Filter 'Screen Size' is not in the left navigation; nothing was verified.`);
 		}
 
 
 
-		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listDisplaySizeOptionsBy,"screensize");
+		const results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listDisplaySizeOptionsBy,"screensize");
 
 			if(results.length==0) {
 			 expect(results.length>0);
@@ -350,18 +344,18 @@ test('verifyingDisplaySizeFilterFunctionality ',async ({page},testInfo)=> {
 		
 
 		for (const product of results) {
-			let filter:string = genericUtility.safeLower(product.get("filter"));
-    	let title:string = genericUtility.safeLower(product.get("title"));
-      let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
-      let about :string= genericUtility.safeLower(product.get("about"));
-    	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+			const filter:string = genericUtility.safeLower(product.get("filter"));
+    	const title:string = genericUtility.safeLower(product.get("title"));
+      const keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
+      const about :string= genericUtility.safeLower(product.get("about"));
+    	const techDetails:string = genericUtility.safeLower(product.get("techDetails"));
     	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
     	if (!title && !keyFeatures && !about && !techDetails) {
     		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
     		continue;
     	}
 
-    	    let isMatch:boolean = title.includes(filter)
+    	    const isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
     	                   || about.includes(filter)
     	                   || techDetails.includes(filter);
@@ -397,11 +391,11 @@ test('verifyingDisplayTypeFilterFunctionality ',async ({page},testInfo)=> {
 		
 				
 		
-	  let landingPage = new AmazonLandingPage(page);
-  let capHandler = new CaptchaHandler(page);
-  let productPage = new ProductListingPage(page);
-  let genericUtility = new GenericUtility(page,testInfo);
-	let sharedFilterFlows = new SharedFilterFlows(page,testInfo);
+	  const landingPage = new AmazonLandingPage(page);
+  const capHandler = new CaptchaHandler(page);
+  const productPage = new ProductListingPage(page);
+  const genericUtility = new GenericUtility(page,testInfo);
+	const sharedFilterFlows = new SharedFilterFlows(page,testInfo);
   const testName: string = testInfo.title;
 
 	
@@ -413,13 +407,12 @@ test('verifyingDisplayTypeFilterFunctionality ',async ({page},testInfo)=> {
 		await genericUtility.refreshIfServiceUnavailable();
 
 		if (!await(productPage.filterCheckUnderList("Display Type"))) {
-			console.warn(`[${testName}] Filter option ' Display Type' does not exist in the list. Skipping the test.`);
-			return ;
+			testInfo.skip(true, `Filter 'Display Type' is not in the left navigation; nothing was verified.`);
 		}
 
 
 
-		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listDisplayTypeOptionsBy,"displaytype");
+		const results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listDisplayTypeOptionsBy,"displaytype");
 
 			if(results.length==0) {
 			 expect(results.length>0);
@@ -430,18 +423,18 @@ test('verifyingDisplayTypeFilterFunctionality ',async ({page},testInfo)=> {
 		
 
 		for (const product of results) {
-			let filter:string = genericUtility.safeLower(product.get("filter"));
-    	let title:string = genericUtility.safeLower(product.get("title"));
-      let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
-      let about :string= genericUtility.safeLower(product.get("about"));
-    	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+			const filter:string = genericUtility.safeLower(product.get("filter"));
+    	const title:string = genericUtility.safeLower(product.get("title"));
+      const keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
+      const about :string= genericUtility.safeLower(product.get("about"));
+    	const techDetails:string = genericUtility.safeLower(product.get("techDetails"));
     	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
     	if (!title && !keyFeatures && !about && !techDetails) {
     		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
     		continue;
     	}
 
-    	    let isMatch:boolean = title.includes(filter)
+    	    const isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
     	                   || about.includes(filter)
     	                   || techDetails.includes(filter);
@@ -477,11 +470,11 @@ test('verifyingMobilePhonePrimaryCameraResolutionFilterFunctionality ',async ({p
 		
 				
 		
-	  let landingPage = new AmazonLandingPage(page);
-  let capHandler = new CaptchaHandler(page);
-  let productPage = new ProductListingPage(page);
-  let genericUtility = new GenericUtility(page,testInfo);
-	let sharedFilterFlows = new SharedFilterFlows(page,testInfo);
+	  const landingPage = new AmazonLandingPage(page);
+  const capHandler = new CaptchaHandler(page);
+  const productPage = new ProductListingPage(page);
+  const genericUtility = new GenericUtility(page,testInfo);
+	const sharedFilterFlows = new SharedFilterFlows(page,testInfo);
   const testName: string = testInfo.title;
 
 	
@@ -493,13 +486,12 @@ test('verifyingMobilePhonePrimaryCameraResolutionFilterFunctionality ',async ({p
 		await genericUtility.refreshIfServiceUnavailable();
 
 		if (!await(productPage.filterCheckUnderList("Mobile Phone Primary Camera Resolution"))) {
-			console.warn(`[${testName}] Filter option ' Mobile Phone Primary Camera Resolution' does not exist in the list. Skipping the test.`);
-			return ;
+			testInfo.skip(true, `Filter 'Mobile Phone Primary Camera Resolution' is not in the left navigation; nothing was verified.`);
 		}
 
 
 
-		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listMobilePhonePrimaryCameraResolutionOptionsBy,"mobilephoneprimarycameraresolution");
+		const results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listMobilePhonePrimaryCameraResolutionOptionsBy,"mobilephoneprimarycameraresolution");
 
 			if(results.length==0) {
 			 expect(results.length>0);
@@ -510,18 +502,18 @@ test('verifyingMobilePhonePrimaryCameraResolutionFilterFunctionality ',async ({p
 		
 
 		for (const product of results) {
-			let filter:string = genericUtility.safeLower(product.get("filter"));
-    	let title:string = genericUtility.safeLower(product.get("title"));
-      let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
-      let about :string= genericUtility.safeLower(product.get("about"));
-    	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+			const filter:string = genericUtility.safeLower(product.get("filter"));
+    	const title:string = genericUtility.safeLower(product.get("title"));
+      const keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
+      const about :string= genericUtility.safeLower(product.get("about"));
+    	const techDetails:string = genericUtility.safeLower(product.get("techDetails"));
     	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
     	if (!title && !keyFeatures && !about && !techDetails) {
     		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
     		continue;
     	}
 
-    	    let isMatch:boolean = title.includes(filter)
+    	    const isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
     	                   || about.includes(filter)
     	                   || techDetails.includes(filter);
@@ -556,11 +548,11 @@ test('verifyingProcessorSpeedFilterFunctionality ',async ({page},testInfo)=> {
 		
 				
 		
-	  let landingPage = new AmazonLandingPage(page);
-  let capHandler = new CaptchaHandler(page);
-  let productPage = new ProductListingPage(page);
-  let genericUtility = new GenericUtility(page,testInfo);
-	let sharedFilterFlows = new SharedFilterFlows(page,testInfo);
+	  const landingPage = new AmazonLandingPage(page);
+  const capHandler = new CaptchaHandler(page);
+  const productPage = new ProductListingPage(page);
+  const genericUtility = new GenericUtility(page,testInfo);
+	const sharedFilterFlows = new SharedFilterFlows(page,testInfo);
   const testName: string = testInfo.title;
 
 	
@@ -572,13 +564,12 @@ test('verifyingProcessorSpeedFilterFunctionality ',async ({page},testInfo)=> {
 		await genericUtility.refreshIfServiceUnavailable();
 
 		if (!await(productPage.filterCheckUnderList("Processor Speed"))) {
-			console.warn(`[${testName}] Filter option ' Processor Speed' does not exist in the list. Skipping the test.`);
-			return ;
+			testInfo.skip(true, `Filter 'Processor Speed' is not in the left navigation; nothing was verified.`);
 		}
 
 
 
-		let results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listProcessorSpeedOptionsBy,"processorspeed");
+		const results:Map<string,string | number |boolean |null |string[]>[] =await sharedFilterFlows.applyFilterAndValidateProductsWithResult(productPage.listProcessorSpeedOptionsBy,"processorspeed");
 
 			if(results.length==0) {
 			 expect(results.length>0);
@@ -589,18 +580,18 @@ test('verifyingProcessorSpeedFilterFunctionality ',async ({page},testInfo)=> {
 		
 
 		for (const product of results) {
-			let filter:string = genericUtility.safeLower(product.get("filter"));
-    	let title:string = genericUtility.safeLower(product.get("title"));
-      let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
-      let about :string= genericUtility.safeLower(product.get("about"));
-    	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+			const filter:string = genericUtility.safeLower(product.get("filter"));
+    	const title:string = genericUtility.safeLower(product.get("title"));
+      const keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
+      const about :string= genericUtility.safeLower(product.get("about"));
+    	const techDetails:string = genericUtility.safeLower(product.get("techDetails"));
     	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
     	if (!title && !keyFeatures && !about && !techDetails) {
     		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
     		continue;
     	}
 
-    	    let isMatch:boolean = title.includes(filter)
+    	    const isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
     	                   || about.includes(filter)
     	                   || techDetails.includes(filter);
