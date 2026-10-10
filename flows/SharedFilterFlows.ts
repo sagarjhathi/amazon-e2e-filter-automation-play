@@ -129,6 +129,9 @@ class SharedFilterFlows {
 
  let productResult: Map<string,string |number |boolean |null |string[]> = new Map<string,string |number |boolean |null |string[]>();
  productResult.set("filter", filterValue);
+ // Always return the same keys, so a product that did not load has empty values, never missing keys.
+ for (const key of ["title", "keyFeatures", "about", "techDetails"]) { productResult.set(key, null); }
+ productResult.set("loaded", false);
  let page2 :Page | undefined;
  const listingUrl :string = this.page.url();
 try {
@@ -172,27 +175,29 @@ const detailUtility = new GenericUtility(page2, this.testInfo);
 
 let productPageLoaded :boolean = false;
 try {
-	await detailPage.productNameIndividualPage.waitFor({ state: 'visible', timeout: 10_000 });
+	await detailPage.productNameIndividualPage.first().waitFor({ state: 'visible', timeout: 10_000 });
 	productPageLoaded = true;
+	productResult.set("loaded", true);
 	await detailUtility.moveMouseLikeHuman();
 } catch (error) {
 	console.warn(`[${testName}] Product detail page did not load for index ${productIndex} filter '${filterValue}' (tab url: ${page2.url()}, title: '${await page2.title()}'); skipping detail scrape to avoid redundant retries/timeouts`);
 	await detailUtility.capture(this.testInfo, "detail-page-not-loaded", filterValue, String(productIndex));
 }
 
-let name :string ="";
 try {
 if (productPageLoaded) {
-name = await detailUtility.fetchTextWithRetries(detailPage.productNameIndividualPage);
-let keyFeatures :string= await detailUtility.fetchTextWithRetries(detailPage.productKeyFeatureBlock);
-let about :string = await detailUtility.fetchTextWithRetries(detailPage.aboutThisItemBulletPoint);
-let techDetails :string = await detailUtility.fetchTextWithRetries(detailPage.technicalDetailsBlockIndividualPage);
+const title :string = await detailUtility.readText(detailPage.productNameIndividualPage.first());
+	await detailUtility.scrollToIfPresent(detailPage.productKeyFeatureBlock);
+const keyFeatures :string = await detailUtility.readRows(detailPage.productKeyFeatureBlock);
+const about :string = await detailUtility.readText(detailPage.aboutThisItemBulletPoint);
+	await detailUtility.scrollToIfPresent(detailPage.technicalDetailsBlockIndividualPage);
+const techDetails :string = await detailUtility.readRows(detailPage.technicalDetailsBlockIndividualPage);
 
-await this.genericUtility.addFieldIfPresent("title",name ,filterValue,productIndex,productResult);
+await this.genericUtility.addFieldIfPresent("title",title ,filterValue,productIndex,productResult);
 await this.genericUtility.addFieldIfPresent("keyFeatures",keyFeatures ,filterValue,productIndex,productResult);
 await this.genericUtility.addFieldIfPresent("about",about ,filterValue,productIndex,productResult);
 await this.genericUtility.addFieldIfPresent("techDetails",techDetails ,filterValue,productIndex,productResult);
-console.log(`[${testName}] Extracting 'name', 'keyFeatures', 'about', 'techDetails' within productNameListingPage loop`);
+	console.log(`[${testName}] Extracted product ${productIndex} for '${filterValue}': title ${title.length}, key features ${keyFeatures.length}, about ${about.length}, tech details ${techDetails.length} characters`);
 }
 
 }catch(error) {

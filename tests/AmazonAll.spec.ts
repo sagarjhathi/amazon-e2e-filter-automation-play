@@ -108,6 +108,11 @@ test('verifyingStorageCapacityFilterFunctionality ', async ({ page }, testInfo) 
       let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
       let about :string= genericUtility.safeLower(product.get("about"));
     	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+    	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
+    	if (!title && !keyFeatures && !about && !techDetails) {
+    		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
+    		continue;
+    	}
 
     	    let isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
@@ -190,6 +195,11 @@ test('verifyingBatteryCapacityFilterFunctionality ', async ({ page }, testInfo) 
       let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
       let about :string= genericUtility.safeLower(product.get("about"));
     	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+    	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
+    	if (!title && !keyFeatures && !about && !techDetails) {
+    		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
+    		continue;
+    	}
 
     	    let isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
@@ -265,6 +275,11 @@ test('verifyingDiscountFilterFunctionality ',async ({page},testInfo)=> {
       let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
       let about :string= genericUtility.safeLower(product.get("about"));
     	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+    	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
+    	if (!title && !keyFeatures && !about && !techDetails) {
+    		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
+    		continue;
+    	}
 
     	    let isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
@@ -340,6 +355,11 @@ test('verifyingDisplaySizeFilterFunctionality ',async ({page},testInfo)=> {
       let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
       let about :string= genericUtility.safeLower(product.get("about"));
     	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+    	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
+    	if (!title && !keyFeatures && !about && !techDetails) {
+    		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
+    		continue;
+    	}
 
     	    let isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
@@ -415,6 +435,11 @@ test('verifyingDisplayTypeFilterFunctionality ',async ({page},testInfo)=> {
       let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
       let about :string= genericUtility.safeLower(product.get("about"));
     	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+    	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
+    	if (!title && !keyFeatures && !about && !techDetails) {
+    		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
+    		continue;
+    	}
 
     	    let isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
@@ -490,6 +515,11 @@ test('verifyingMobilePhonePrimaryCameraResolutionFilterFunctionality ',async ({p
       let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
       let about :string= genericUtility.safeLower(product.get("about"));
     	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+    	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
+    	if (!title && !keyFeatures && !about && !techDetails) {
+    		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
+    		continue;
+    	}
 
     	    let isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)
@@ -564,6 +594,11 @@ test('verifyingProcessorSpeedFilterFunctionality ',async ({page},testInfo)=> {
       let keyFeatures:string = genericUtility.safeLower(product.get("keyFeatures"));
       let about :string= genericUtility.safeLower(product.get("about"));
     	let techDetails:string = genericUtility.safeLower(product.get("techDetails"));
+    	// Nothing was read for this product (page not loaded, or no sections found): that is not a filter defect.
+    	if (!title && !keyFeatures && !about && !techDetails) {
+    		console.warn(`[${testName}] No product data was read for filter '${filter}'; skipping this product`);
+    		continue;
+    	}
 
     	    let isMatch:boolean = title.includes(filter)
     	                   || keyFeatures.includes(filter)

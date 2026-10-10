@@ -69,21 +69,30 @@ async openAndGetNewTab(triggerAction: () => Promise<void>, timeoutMs?: number): 
 }   
 
 
-async fetchTextWithRetries(locator: Locator): Promise<string> {
-  const max = 2;
+// Visible text of whatever the locator matches, or "" if nothing matches.
+// Unlike innerText(), allInnerTexts() does not wait for the element and does not fail on several matches.
+async readText(locator: Locator): Promise<string> {
+  return (await locator.allInnerTexts()).join("\n").trim();
+}
 
-  for (let i = 0; i < max; i++) {
-    try {
-      const text: string = (await locator.innerText()).trim();
-      if (text.length > 0) {
-        return text;
-      }
-    } catch (error) {
-      console.warn(`Attempt ${i + 1} failed while fetching text: ${error}`);
-    }
+// Every table row inside the container as one line, e.g. "Battery Capacity 5000 milliamp_hours".
+// Amazon hides most spec rows behind "See more product details". Visible text skips hidden rows,
+// textContent does not, so this still reads them. Returns "" if the container is not on the page.
+async readRows(container: Locator): Promise<string> {
+  const rows = await container.locator("tr").allTextContents();
+  return rows
+    .map((row) => row.replace(/\s+/g, " ").trim())
+    .filter((row) => row.length > 0)
+    .join("\n");
+}
+
+// Scrolls the element into view if it is on the page. Waits at most 2 s and never throws.
+async scrollToIfPresent(locator: Locator): Promise<void> {
+  try {
+    await locator.first().scrollIntoViewIfNeeded({ timeout: 2000 });
+  } catch (error) {
+    // not on the page, so there is nothing to scroll to
   }
-
-  return ""; // all retries exhausted, nothing non-empty found — matches original Java behavior
 }
 
 
