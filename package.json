@@ -1,7 +1,7 @@
 {
   "name": "amazon-e2e-filter-automation",
   "version": "1.0.0",
-  "description": "",
+  "description": "Learning project: end-to-end tests for the amazon.in product filters, with Playwright and TypeScript. Unofficial, educational use only.",
   "main": "index.js",
   "scripts": {},
   "keywords": [],
