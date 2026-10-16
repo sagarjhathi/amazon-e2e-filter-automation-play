@@ -1,0 +1,110 @@
+[
+  'Deals & Discounts',
+  'Delivery Day',
+  'Eligible for Free Delivery',
+  'Customer Reviews',
+  'Brands',
+  'Price',
+  'Discount',
+  'Colour',
+  'Pay On Delivery',
+  'Cell Phone Brands',
+  'Seller',
+  'Item Condition',
+  'Availability',
+  'New Arrivals',
+  'Battery Type',
+  'Supported Satellite Navigation System',
+  'Purpose',
+  'Front Camera Resolution',
+  'Jack Type',
+  'Display Refresh Rate in Hertz',
+  'GPS Navigation',
+  'Wireless Network Technology',
+  'Screen Size',
+  'Connector Type',
+  'RAM Size',
+  'Connectivity',
+  'Rear Camera Photo Sensor Resolution',
+  'Included Components',
+  'Weight',
+  'Display Type',
+  'Camera Resolution',
+  'Aspect Ratio',
+  'SIM Card Slot Count',
+  'Battery Capacity',
+  'Cellular Technology',
+  'Storage Capacity',
+  'Flash',
+  'Battery Life',
+  'Processor Speed',
+  'Sim Card Size',
+  'Security Feature',
+  'Display Resolution',
+  'Mobile Phone Primary Camera Resolution',
+  'Camera Modes',
+  'Video Capture Resolution',
+  'Camera Feature',
+  'Input',
+  'Operating System',
+  'Country of Origin',
+  'Market Version',
+  'GenAI Model',
+  'Carrier Lock Status'
+]
+[verifyingProcessorSpeedFilterFunctionality ] Within applyFilterAndValidateProductsWithResult method
+[verifyingProcessorSpeedFilterFunctionality ] Within applyFilterAndValidateProductsWithResult filterOptions size is -> 5
+[RunConfig] Mode -> cron (GITHUB_EVENT_NAME=schedule, IS_CRON=); filter options = all, products = 5
+[RunConfig] Filter options -> 5 available, setting is all, using 5
+[verifyingProcessorSpeedFilterFunctionality ] Within filterOptions loop in applyFilterAndValidateProductsWithResult
+Within getFilterByTypeAndName method
+Within getFilterByTypeAndName method
+Within getAppliedFilterByTypeAndName method
+[RunConfig] Products -> 16 available, setting is 5, using 5
+[verifyingProcessorSpeedFilterFunctionality ] Within productNameListingPage loop in applyFilterAndValidateProductsWithResult
+[verifyingProcessorSpeedFilterFunctionality ] Inside the loop and product name is Apple iPhone 17 Pro 512 GB: 15.93 cm (6.3″) Display with Promotion up to 120Hz, A19 Pro Chip, Breakthrough Battery Life, Pro Fusion Camera System with Center Stage Front Camera; Cosmic Orange
+[verifyingProcessorSpeedFilterFunctionality ] Getting product by index in productNameListingPage loop
+[verifyingProcessorSpeedFilterFunctionality ] Clicked on the product name, new tab should open
+[verifyingProcessorSpeedFilterFunctionality ] Closed the product tab and going back to the product listing
+[verifyingProcessorSpeedFilterFunctionality ] Added 'filter','title','keyFeatures', 'about', 'techDetails' into the Map -> productResult
+[verifyingProcessorSpeedFilterFunctionality ] Added 'productResult' Map into the 'results' i.e list of maps
+[verifyingProcessorSpeedFilterFunctionality ] ==========================================================================================================
+[verifyingProcessorSpeedFilterFunctionality ] Within productNameListingPage loop in applyFilterAndValidateProductsWithResult
+[verifyingProcessorSpeedFilterFunctionality ] Inside the loop and product name is realme P4X Smartphone 6.72 inch 144Hz Display 7000mAh Titan Bettery 45W Fast Charge 6GB RAM 128GB ROM Dimensity 7400 Ultra 5G Chipset IP64 Waterproof Dual SIM (Lake Green)
+[verifyingProcessorSpeedFilterFunctionality ] Getting product by index in productNameListingPage loop
+[verifyingProcessorSpeedFilterFunctionality ] Clicked on the product name, new tab should open
+[verifyingProcessorSpeedFilterFunctionality ] Closed the product tab and going back to the product listing
+[verifyingProcessorSpeedFilterFunctionality ] Added 'filter','title','keyFeatures', 'about', 'techDetails' into the Map -> productResult
+[verifyingProcessorSpeedFilterFunctionality ] Added 'productResult' Map into the 'results' i.e list of maps
+[verifyingProcessorSpeedFilterFunctionality ] ==========================================================================================================
+[verifyingProcessorSpeedFilterFunctionality ] Within productNameListingPage loop in applyFilterAndValidateProductsWithResult
+[verifyingProcessorSpeedFilterFunctionality ] Inside the loop and product name is Apple iPhone Air (256 GB) - Space Black
+16.63 cm (6.5″) Display with ProMotion up to 120Hz, Powerful A19 Pro Chip, Center Stage Front Camera, All-Day Battery Life
+[verifyingProcessorSpeedFilterFunctionality ] Getting product by index in productNameListingPage loop
+[verifyingProcessorSpeedFilterFunctionality ] Clicked on the product name, new tab should open
+[verifyingProcessorSpeedFilterFunctionality ] Closed the product tab and going back to the product listing
+[verifyingProcessorSpeedFilterFunctionality ] Added 'filter','title','keyFeatures', 'about', 'techDetails' into the Map -> productResult
+[verifyingProcessorSpeedFilterFunctionality ] Added 'productResult' Map into the 'results' i.e list of maps
+[verifyingProcessorSpeedFilterFunctionality ] ==========================================================================================================
+[verifyingProcessorSpeedFilterFunctionality ] Within productNameListingPage loop in applyFilterAndValidateProductsWithResult
+[verifyingProcessorSpeedFilterFunctionality ] Inside the loop and product name is Google Pixel 10 5G (Obsidian, 12GB RAM, 256GB Storage)
+[verifyingProcessorSpeedFilterFunctionality ] Getting product by index in productNameListingPage loop
+[verifyingProcessorSpeedFilterFunctionality ] Clicked on the product name, new tab should open
+[verifyingProcessorSpeedFilterFunctionality ] Closed the product tab and going back to the product listing
+[verifyingProcessorSpeedFilterFunctionality ] Added 'filter','title','keyFeatures', 'about', 'techDetails' into the Map -> productResult
+[verifyingProcessorSpeedFilterFunctionality ] Added 'productResult' Map into the 'results' i.e list of maps
+[verifyingProcessorSpeedFilterFunctionality ] ==========================================================================================================
+[verifyingProcessorSpeedFilterFunctionality ] Within productNameListingPage loop in applyFilterAndValidateProductsWithResult
+[verifyingProcessorSpeedFilterFunctionality ] Inside the loop and product name is Nokia 105 Classic | Single SIM Keypad Phone with Built-in UPI Payments, Long-Lasting Battery, Wireless FM Radio, Without Charger| 1 Year Replacement Guarantee | Charcoal
+[verifyingProcessorSpeedFilterFunctionality ] Getting product by index in productNameListingPage loop
+[verifyingProcessorSpeedFilterFunctionality ] Clicked on the product name, new tab should open
+[verifyingProcessorSpeedFilterFunctionality ] Closed the product tab and going back to the product listing
+[verifyingProcessorSpeedFilterFunctionality ] Added 'filter','title','keyFeatures', 'about', 'techDetails' into the Map -> productResult
+[verifyingProcessorSpeedFilterFunctionality ] Added 'productResult' Map into the 'results' i.e list of maps
+[verifyingProcessorSpeedFilterFunctionality ] ==========================================================================================================
+[verifyingProcessorSpeedFilterFunctionality ] Clearing the filter value -> Less Than 0.99 GHz within productNameListingPage loop
+[verifyingProcessorSpeedFilterFunctionality ] ==========================================================================================================
+[verifyingProcessorSpeedFilterFunctionality ] ==========================================================================================================
+[verifyingProcessorSpeedFilterFunctionality ] Within filterOptions loop in applyFilterAndValidateProductsWithResult
+[verifyingProcessorSpeedFilterFunctionality ] Avoiding out of bounds issue by traversing only up to the in-loop size in applyFilterAndValidateProductsWithResult
+[verifyingProcessorSpeedFilterFunctionality ] Retrieved 5 results from applyFilterAndValidateProductsWithResult.

@@ -1,0 +1,65 @@
+[
+  'Deals & Discounts',
+  'Delivery Day',
+  'Eligible for Free Delivery',
+  'Customer Reviews',
+  'Brands',
+  'Price',
+  'Discount',
+  'Colour',
+  'Pay On Delivery',
+  'Cell Phone Brands',
+  'Seller',
+  'Item Condition',
+  'New Arrivals',
+  'Availability',
+  'Flash',
+  'Jack Type',
+  'GPS Navigation',
+  'Screen Size',
+  'Purpose',
+  'Cellular Technology',
+  'Connector Type',
+  'Front Camera Resolution',
+  'Included Components',
+  'Weight',
+  'RAM Size',
+  'Security Feature',
+  'Rear Camera Photo Sensor Resolution',
+  'Video Capture Resolution',
+  'Connectivity',
+  'Display Type',
+  'Display Refresh Rate in Hertz',
+  'Battery Capacity',
+  'SIM Card Slot Count',
+  'Supported Satellite Navigation System',
+  'Processor Speed',
+  'Storage Capacity',
+  'Wireless Network Technology',
+  'Battery Type',
+  'Sim Card Size',
+  'Input',
+  'Camera Feature',
+  'Battery Life',
+  'Mobile Phone Primary Camera Resolution',
+  'Display Resolution',
+  'Camera Modes',
+  'Country of Origin',
+  'Camera Resolution',
+  'Operating System',
+  'Aspect Ratio',
+  'GenAI Model',
+  'Market Version',
+  'Carrier Lock Status'
+]
+[verifyingDisplaySizeFilterFunctionality ] Within applyFilterAndValidateProductsWithResult method
+[verifyingDisplaySizeFilterFunctionality ] Within applyFilterAndValidateProductsWithResult filterOptions size is -> 2
+[RunConfig] Mode -> cron (GITHUB_EVENT_NAME=schedule, IS_CRON=); filter options = all, products = 5
+[RunConfig] Filter options -> 2 available, setting is all, using 2
+[verifyingDisplaySizeFilterFunctionality ] Within filterOptions loop in applyFilterAndValidateProductsWithResult
+Within getFilterByTypeAndName method
+Within getFilterByTypeAndName method
+Within getAppliedFilterByTypeAndName method
+[verifyingDisplaySizeFilterFunctionality ] Within filterOptions loop in applyFilterAndValidateProductsWithResult
+[verifyingDisplaySizeFilterFunctionality ] Avoiding out of bounds issue by traversing only up to the in-loop size in applyFilterAndValidateProductsWithResult
+[verifyingDisplaySizeFilterFunctionality ] Retrieved 0 results from applyFilterAndValidateProductsWithResult.

@@ -1,0 +1,65 @@
+[
+  'Deals & Discounts',
+  'Delivery Day',
+  'Eligible for Free Delivery',
+  'Customer Reviews',
+  'Brands',
+  'Price',
+  'Discount',
+  'Colour',
+  'Pay On Delivery',
+  'Cell Phone Brands',
+  'Seller',
+  'Item Condition',
+  'Availability',
+  'New Arrivals',
+  'Battery Type',
+  'Supported Satellite Navigation System',
+  'Purpose',
+  'Front Camera Resolution',
+  'Jack Type',
+  'Display Refresh Rate in Hertz',
+  'GPS Navigation',
+  'Wireless Network Technology',
+  'Screen Size',
+  'Connector Type',
+  'RAM Size',
+  'Connectivity',
+  'Rear Camera Photo Sensor Resolution',
+  'Included Components',
+  'Weight',
+  'Display Type',
+  'Camera Resolution',
+  'Aspect Ratio',
+  'SIM Card Slot Count',
+  'Battery Capacity',
+  'Cellular Technology',
+  'Storage Capacity',
+  'Flash',
+  'Battery Life',
+  'Processor Speed',
+  'Sim Card Size',
+  'Security Feature',
+  'Display Resolution',
+  'Mobile Phone Primary Camera Resolution',
+  'Camera Modes',
+  'Video Capture Resolution',
+  'Camera Feature',
+  'Input',
+  'Operating System',
+  'Country of Origin',
+  'Market Version',
+  'GenAI Model',
+  'Carrier Lock Status'
+]
+[verifyingMobilePhonePrimaryCameraResolutionFilterFunctionality ] Within applyFilterAndValidateProductsWithResult method
+[verifyingMobilePhonePrimaryCameraResolutionFilterFunctionality ] Within applyFilterAndValidateProductsWithResult filterOptions size is -> 7
+[RunConfig] Mode -> cron (GITHUB_EVENT_NAME=schedule, IS_CRON=); filter options = all, products = 5
+[RunConfig] Filter options -> 7 available, setting is all, using 7
+[verifyingMobilePhonePrimaryCameraResolutionFilterFunctionality ] Within filterOptions loop in applyFilterAndValidateProductsWithResult
+Within getFilterByTypeAndName method
+Within getFilterByTypeAndName method
+Within getAppliedFilterByTypeAndName method
+[verifyingMobilePhonePrimaryCameraResolutionFilterFunctionality ] Within filterOptions loop in applyFilterAndValidateProductsWithResult
+[verifyingMobilePhonePrimaryCameraResolutionFilterFunctionality ] Avoiding out of bounds issue by traversing only up to the in-loop size in applyFilterAndValidateProductsWithResult
+[verifyingMobilePhonePrimaryCameraResolutionFilterFunctionality ] Retrieved 0 results from applyFilterAndValidateProductsWithResult.

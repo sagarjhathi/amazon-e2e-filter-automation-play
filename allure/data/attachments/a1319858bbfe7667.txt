@@ -1,0 +1,4 @@
+[verifyingDiscountFilterFunctionality ] Filter click failed for: 10% Off or more — TimeoutError: locator.evaluate: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('//span[@class=\'a-size-base a-color-base puis-bold-weight-text\' and text()=\'Discount\']/parent::div/following-sibling::ul//span[@class=\'a-size-base a-color-base a-text-bold\' and text()=\'10% Off or more\']')
+

@@ -1,0 +1,4 @@
+[verifyingMobilePhonePrimaryCameraResolutionFilterFunctionality ] Filter click failed for: Up to 3.9 MP — TimeoutError: locator.evaluate: Timeout 15000ms exceeded.
+Call log:
+  - waiting for locator('//span[@class=\'a-size-base a-color-base puis-bold-weight-text\' and text()=\'Mobile Phone Primary Camera Resolution\']/parent::div/following-sibling::ul//span[@class=\'a-size-base a-color-base a-text-bold\' and text()=\'Up to 3.9 MP\']')
+

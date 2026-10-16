@@ -1,0 +1,65 @@
+[
+  'Deals & Discounts',
+  'Delivery Day',
+  'Eligible for Free Delivery',
+  'Customer Reviews',
+  'Brands',
+  'Price',
+  'Discount',
+  'Colour',
+  'Pay On Delivery',
+  'Cell Phone Brands',
+  'Seller',
+  'Item Condition',
+  'New Arrivals',
+  'Availability',
+  'Flash',
+  'GPS Navigation',
+  'Jack Type',
+  'Screen Size',
+  'Purpose',
+  'Connector Type',
+  'Front Camera Resolution',
+  'Cellular Technology',
+  'Video Capture Resolution',
+  'Included Components',
+  'RAM Size',
+  'Rear Camera Photo Sensor Resolution',
+  'Security Feature',
+  'Connectivity',
+  'Display Type',
+  'Weight',
+  'Display Refresh Rate in Hertz',
+  'Battery Capacity',
+  'Storage Capacity',
+  'Processor Speed',
+  'Supported Satellite Navigation System',
+  'Wireless Network Technology',
+  'Sim Card Size',
+  'SIM Card Slot Count',
+  'Input',
+  'Battery Type',
+  'Camera Feature',
+  'Battery Life',
+  'Mobile Phone Primary Camera Resolution',
+  'Display Resolution',
+  'Camera Modes',
+  'Country of Origin',
+  'Camera Resolution',
+  'Operating System',
+  'Aspect Ratio',
+  'GenAI Model',
+  'Market Version',
+  'Carrier Lock Status'
+]
+[verifyingDiscountFilterFunctionality ] Within applyFilterAndValidateProductsWithResult method
+[verifyingDiscountFilterFunctionality ] Within applyFilterAndValidateProductsWithResult filterOptions size is -> 6
+[RunConfig] Mode -> cron (GITHUB_EVENT_NAME=schedule, IS_CRON=); filter options = all, products = 5
+[RunConfig] Filter options -> 6 available, setting is all, using 6
+[verifyingDiscountFilterFunctionality ] Within filterOptions loop in applyFilterAndValidateProductsWithResult
+Within getFilterByTypeAndName method
+Within getFilterByTypeAndName method
+Within getAppliedFilterByTypeAndName method
+[verifyingDiscountFilterFunctionality ] Within filterOptions loop in applyFilterAndValidateProductsWithResult
+[verifyingDiscountFilterFunctionality ] Avoiding out of bounds issue by traversing only up to the in-loop size in applyFilterAndValidateProductsWithResult
+[verifyingDiscountFilterFunctionality ] Retrieved 0 results from applyFilterAndValidateProductsWithResult.
