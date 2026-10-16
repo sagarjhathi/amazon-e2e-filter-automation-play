@@ -90,7 +90,7 @@ npm run lint              # lint
 npm run lint:fix          # lint and fix what can be fixed automatically
 ```
 
-To run with the weekly-run sample locally: `IS_CRON=true npm test` (PowerShell: `$env:IS_CRON = "true"; npm test`).
+To run with the scheduled-run sample locally: `IS_CRON=true npm test` (PowerShell: `$env:IS_CRON = "true"; npm test`).
 
 Locally, the runner writes the Playwright HTML report to `playwright-report/` and the Allure results to `allure-results/`, and keeps a full trace of failed tests and retries.
 
@@ -101,9 +101,18 @@ Locally, the runner writes the Playwright HTML report to `playwright-report/` an
 | Mode | When | Filter options | Products each |
 |---|---|---|---|
 | standard | push, pull request, manual run, any local run | first 5 | first 3 |
-| cron | the weekly scheduled run, a manual run with "full run" ticked, or `IS_CRON=true` | first 3 | first 5 |
+| cron | the daily scheduled run, a manual run with "full run" ticked, or `IS_CRON=true` | all that the page shows | first 5 |
 
-The environment variables `FILTER_OPTIONS_COUNT`, `PRODUCTS_COUNT`, `RUN_ALL_FILTER_OPTIONS` and `RUN_ALL_PRODUCTS` override these. A cap never exceeds what the page shows. The log states which mode was chosen and each limit that was applied.
+"All" means however many options the page lists in that run, so the number can differ between runs.
+
+To change either setting for one run, set an environment variable to a number or to `all`:
+
+| Variable | Example | Effect |
+|---|---|---|
+| `FILTER_OPTIONS` | `FILTER_OPTIONS=all` or `FILTER_OPTIONS=2` | How many filter options to try. |
+| `PRODUCTS` | `PRODUCTS=all` or `PRODUCTS=1` | How many products to open under each filter option. |
+
+Anything that is not `all` or a number is ignored, and the default for the mode is used. A number larger than what the page shows just means "all of them". The first log lines of a run state the mode and both settings, and each limit logs how many it resolved to.
 
 ## Continuous integration
 
@@ -113,10 +122,10 @@ The pipeline is defined in `.github/workflows/playwright.yml`.
 |---|---|
 | Push to `master` | standard |
 | Pull request into `master` | standard |
-| Weekly, Sundays 21:00 UTC (Monday 02:30 IST) | cron |
+| Daily at 20:00 UTC (01:30 IST) | cron |
 | Manual run from the Actions tab | standard, or cron if "full run" is ticked |
 
-A newer push or pull-request run cancels the older one on the same branch. The weekly run and manual runs are never cancelled.
+A newer push or pull-request run cancels the older one on the same branch. The scheduled run and manual runs are never cancelled.
 
 **Jobs**
 
@@ -130,7 +139,7 @@ A newer push or pull-request run cancels the older one on the same branch. The w
 
 **What CI records.** Traces were the largest artifact (several GB per run), so CI records none. A failed test keeps its video and a failure screenshot, and the log shows each step.
 
-**Publishing.** Pushes to `master`, the weekly run and manual runs publish the reports to the `gh-pages` branch as one fresh commit each time, so the branch holds only the latest reports and never grows. Pull requests build the reports but do not publish them. GitHub Pages serves the branch from its root.
+**Publishing.** Pushes to `master`, the scheduled run and manual runs publish the reports to the `gh-pages` branch as one fresh commit each time, so the branch holds only the latest reports and never grows. Pull requests build the reports but do not publish them. GitHub Pages serves the branch from its root.
 
 ```
 index.html     landing page with a link to each report

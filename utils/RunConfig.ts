@@ -1,101 +1,66 @@
 /**
- * Decides how much of each flow to run, based on what triggered the run.
+ * Decides how much each test covers: how many filter options to try, and how many products to open under each.
  *
- *  - cron     : scheduled run (GitHub Actions `schedule`, or IS_CRON=true)  -> wider sample: 3 filter options, 5 products each
- *  - standard : push / pull request / local run                              -> small, fast sample
+ * Each setting is either a number (a cap) or 'all' (however many the page shows).
+ * The defaults depend on what started the run:
  *
- * Any value can be overridden per run with an environment variable (see ENV_KEYS below),
- * which is the replacement for the old properties-file keys.
+ *                      filter options   products
+ *   standard           5                3          push, pull request, manual run, local run
+ *   cron               all              5          scheduled run, or IS_CRON=true
+ *
+ * Override either setting for one run with an environment variable, using a number or "all":
+ *
+ *   FILTER_OPTIONS=all       PRODUCTS=2
  */
 
-type RunMode = 'cron' | 'standard';
+type Limit = number | 'all';
 
-interface RunSettings {
-  runAllFilterOptions: boolean;
-  filterOptionsCount: number;
-  runAllProducts: boolean;
-  productsCount: number;
-}
+const DEFAULTS = {
+  standard: { filterOptions: 5, products: 3 },
+  cron: { filterOptions: 'all', products: 5 },
+} satisfies Record<string, Record<string, Limit>>;
 
-const DEFAULTS: Record<RunMode, RunSettings> = {
-  standard: { runAllFilterOptions: false, filterOptionsCount: 5, runAllProducts: false, productsCount: 3 },
-  cron:     { runAllFilterOptions: false, filterOptionsCount: 3, runAllProducts: false, productsCount: 5 },
-};
+const mode: keyof typeof DEFAULTS =
+  process.env.IS_CRON?.toLowerCase() === 'true' || process.env.GITHUB_EVENT_NAME === 'schedule' ? 'cron' : 'standard';
 
-const ENV_KEYS = {
-  runAllFilterOptions: 'RUN_ALL_FILTER_OPTIONS',
-  filterOptionsCount: 'FILTER_OPTIONS_COUNT',
-  runAllProducts: 'RUN_ALL_PRODUCTS',
-  productsCount: 'PRODUCTS_COUNT',
-} as const;
-
-function readBool(name: string, fallback: boolean): boolean {
-  const raw = process.env[name];
-  return raw === undefined || raw === '' ? fallback : raw.toLowerCase() === 'true';
-}
-
-function readInt(name: string, fallback: number): number {
-  const parsed = parseInt(process.env[name] ?? '', 10);
+/** The environment variable if it holds "all" or a number, otherwise the default for this mode. */
+function readLimit(envName: string, fallback: Limit): Limit {
+  const raw = (process.env[envName] ?? '').trim().toLowerCase();
+  if (raw === 'all') {
+    return 'all';
+  }
+  const parsed = parseInt(raw, 10);
   return Number.isNaN(parsed) || parsed < 0 ? fallback : parsed;
 }
 
-class RunConfig {
+const filterOptions: Limit = readLimit('FILTER_OPTIONS', DEFAULTS[mode].filterOptions);
+const products: Limit = readLimit('PRODUCTS', DEFAULTS[mode].products);
 
-  static readonly mode: RunMode =
-    process.env.IS_CRON?.toLowerCase() === 'true' || process.env.GITHUB_EVENT_NAME === 'schedule'
-      ? 'cron'
-      : 'standard';
+let logged = false;
 
-  private static readonly settings: RunSettings = {
-    runAllFilterOptions: readBool(ENV_KEYS.runAllFilterOptions, DEFAULTS[RunConfig.mode].runAllFilterOptions),
-    filterOptionsCount: readInt(ENV_KEYS.filterOptionsCount, DEFAULTS[RunConfig.mode].filterOptionsCount),
-    runAllProducts: readBool(ENV_KEYS.runAllProducts, DEFAULTS[RunConfig.mode].runAllProducts),
-    productsCount: readInt(ENV_KEYS.productsCount, DEFAULTS[RunConfig.mode].productsCount),
-  };
-
-  private static modeLogged: boolean = false;
-
-  /** Logs how the mode was chosen and the effective settings, once per run. */
-  private static logModeOnce(): void {
-    if (RunConfig.modeLogged) {
-      return;
-    }
-    RunConfig.modeLogged = true;
+/** How many of `available` to use under `setting`, and a log line that says why. */
+function resolve(what: string, available: number, setting: Limit): number {
+  if (!logged) {
+    logged = true;
     console.log(
-      `[RunConfig] Run mode -> ${RunConfig.mode} ` +
-      `(GITHUB_EVENT_NAME=${process.env.GITHUB_EVENT_NAME ?? 'not set'}, IS_CRON=${process.env.IS_CRON ?? 'not set'})`
+      `[RunConfig] Mode -> ${mode} (GITHUB_EVENT_NAME=${process.env.GITHUB_EVENT_NAME ?? 'not set'}, IS_CRON=${process.env.IS_CRON ?? 'not set'}); ` +
+      `filter options = ${filterOptions}, products = ${products}`
     );
-    console.log(`[RunConfig] Effective settings -> ${JSON.stringify(RunConfig.settings)}`);
   }
+  const limit = setting === 'all' ? available : Math.min(setting, available);
+  console.log(`[RunConfig] ${what} -> ${available} available, setting is ${setting}, using ${limit}`);
+  return limit;
+}
 
+class RunConfig {
   /** How many filter options (brands, storage sizes, ...) to walk through, given how many exist. */
   static filterOptionLimit(available: number): number {
-    RunConfig.logModeOnce();
-    const { runAllFilterOptions, filterOptionsCount } = RunConfig.settings;
-    const limit: number = runAllFilterOptions ? available : Math.min(filterOptionsCount, available);
-    console.log(
-      `[RunConfig] Filter options -> ${available} available, ` +
-      (runAllFilterOptions ? 'running all' : `capped at ${filterOptionsCount}`) +
-      `, will run ${limit}`
-    );
-    return limit;
+    return resolve('Filter options', available, filterOptions);
   }
 
   /** How many products to open under one applied filter, given how many are listed. */
   static productLimit(available: number): number {
-    RunConfig.logModeOnce();
-    const { runAllProducts, productsCount } = RunConfig.settings;
-    const limit: number = runAllProducts ? available : Math.min(productsCount, available);
-    console.log(
-      `[RunConfig] Products -> ${available} listed, ` +
-      (runAllProducts ? 'running all' : `capped at ${productsCount}`) +
-      `, will open ${limit}`
-    );
-    return limit;
-  }
-
-  static describe(): string {
-    return `mode=${RunConfig.mode}, ${JSON.stringify(RunConfig.settings)}`;
+    return resolve('Products', available, products);
   }
 }
 

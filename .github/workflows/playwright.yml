@@ -5,20 +5,20 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
-  # Weekly run, Sundays 21:00 UTC (Monday 02:30 IST). GITHUB_EVENT_NAME=schedule makes
-  # utils/RunConfig.ts use the scheduled-run sample: 3 filter options and 5 products each.
+  # Scheduled run. GITHUB_EVENT_NAME=schedule makes utils/RunConfig.ts use the
+  # scheduled-run sample: all filter options and 5 products each.
   schedule:
-    - cron: '0 21 * * 0'
-  # Manual run from the Actions tab; tick the box to use the same sample as the weekly run.
+  - cron: '0 20 * * *'   # 01:30 AM IST daily
+  # Manual run from the Actions tab; tick the box to use the same sample as the scheduled run.
   workflow_dispatch:
     inputs:
       full_run:
-        description: 'Use the weekly-run sample (3 filter options, 5 products each)'
+        description: 'Use the scheduled-run sample (all filter options, 5 products each)'
         type: boolean
         default: false
 
 # A newer push to the same branch or pull request cancels the older, now outdated run.
-# The weekly run and manual runs get groups of their own so a push can never cancel them:
+# The scheduled run and manual runs get groups of their own so a push can never cancel them:
 #   - schedule          -> the fixed group "weekly" (never cancelled)
 #   - workflow_dispatch -> one group per run (never cancelled, never cancels another)
 #   - push / pull_request -> one group per branch or pull request (older runs are cancelled)
@@ -169,7 +169,7 @@ jobs:
         run: npx allure generate allure-results --clean -o allure-report
 
       # ---- Publish ----
-      # Pull requests only build the reports; only master runs, the weekly run and manual runs publish.
+      # Pull requests only build the reports; only master runs, the scheduled run and manual runs publish.
 
       - name: Publish to gh-pages
         if: ${{ github.event_name != 'pull_request' }}
